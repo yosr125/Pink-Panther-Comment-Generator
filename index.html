@@ -31,8 +31,15 @@
             transition: all 0.2s ease-in-out;
             transform: scale(1);
             outline: none;
-            min-width: 100px; /* Ensure buttons have a minimum width */
+            min-width: 120px; /* Ensure buttons have a minimum width */
+            min-height: 80px; /* Ensure buttons have a minimum height to accommodate images */
             margin: 0.5rem; /* Add margin around buttons */
+            display: flex; /* Use flexbox for content alignment */
+            flex-direction: column; /* Stack content vertically */
+            align-items: center; /* Center content horizontally */
+            justify-content: center; /* Center content vertically */
+            text-align: center; /* Center text */
+            font-size: 0.9rem; /* Slightly smaller font for text with images */
         }
         .word-button:hover {
             background-color: #D81B60; /* Slightly deeper on hover */
@@ -40,6 +47,10 @@
         }
         .word-button:focus {
             box-shadow: 0 0 0 2px rgba(236, 64, 122, 0.5); /* Focus ring for the new pink */
+        }
+        .word-button img {
+            @apply w-12 h-12 rounded-full object-cover mb-1; /* Styling for images inside buttons */
+            border: 2px solid rgba(255, 255, 255, 0.7); /* Small border around image */
         }
         .control-button {
             @apply bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75;
@@ -71,11 +82,12 @@
 <body class="p-4">
     <div class="container">
         <div class="flex items-center justify-center mb-6">
-            <!-- Decorative Pink Panther placeholder image -->
-            <img src="https://placehold.co/60x60/FF69B4/FFFFFF?text=PP" alt="Pink Panther Icon" class="mr-3 rounded-full">
+            <!-- Decorative Pink Panther images -->
+            <img src="png-transparent-inspector-clouseau-the-pink-panther-high-definition-television-desktop-pantera-television-cartoon-fictional-character (1).png" 
+                 alt="Pink Panther Detective" 
+                 class="mr-3 rounded-full w-16 h-16 object-contain">
             <h1 class="text-3xl font-bold text-center text-gray-800">Comment Builder</h1>
-            <!-- Decorative Paw Print -->
-            <img src="https://placehold.co/60x60/FFC0CB/000000?text=Paw" alt="Decorative Paw Print" class="ml-3 rounded-full">
+            <img src="https://placehold.co/60x60/FF69B4/FFFFFF?text=PP" alt="Pink Panther Icon" class="ml-3 rounded-full">
         </div>
 
         <!-- Text Area for Compiled Comment -->
@@ -101,21 +113,63 @@
 
     <script>
         // Array of predefined words and phrases
+        // Each item is an object with 'text' and optionally 'imageUrl'
         const predefinedWords = [
-            "Pink Panther - scam -",
-            "New account.",
-            "Suspicious listings.",
-            "Listing taken from the web.",
-            "Malicious IP.",
-            "Carrier suspected fraud.",
-            "Suspicious drop off point.",
-            "Non responsive member.",
-            "1st High value TX.",
-            "Suspicious fingerprints.",
-            "Signs of label manipulation.",
-            "Known scam pattern.",
-            "Listing/item commonly used with scam cases.",
-            "Suspicious deleted items."
+            { text: "Pink Panther - scam -", imageUrl: "https://placehold.co/80x80/FF69B4/FFFFFF?text=Scam" },
+            { text: "New account.", imageUrl: "https://placehold.co/80x80/ADD8E6/000000?text=New+Acc" },
+            { text: "Suspicious listings.", imageUrl: "https://placehold.co/80x80/FFD700/000000?text=Susp+List" },
+            { text: "Listing taken from the web.", imageUrl: "https://placehold.co/80x80/90EE90/000000?text=Web+Copy" },
+            { text: "Malicious IP.", imageUrl: "https://placehold.co/80x80/FF0000/FFFFFF?text=Bad+IP" },
+            { text: "Carrier suspected fraud.", imageUrl: "https://placehold.co/80x80/FFA500/FFFFFF?text=Carrier" },
+            { text: "Suspicious drop off point.", imageUrl: "https://placehold.co/80x80/800080/FFFFFF?text=Drop+Off" },
+            { text: "Non responsive member.", imageUrl: "https://placehold.co/80x80/D3D3D3/000000?text=No+Resp" },
+            { text: "1st High value TX.", imageUrl: "https://placehold.co/80x80/FF4500/FFFFFF?text=High+Val" },
+            { text: "Suspicious fingerprints.", imageUrl: "https://placehold.co/80x80/00008B/FFFFFF?text=Finger" },
+            { text: "Signs of label manipulation.", imageUrl: "https://placehold.co/80x80/8B4513/FFFFFF?text=Label" },
+            { text: "Known scam pattern.", imageUrl: "https://placehold.co/80x80/8B0000/FFFFFF?text=Scam+Pat" },
+            { text: "Listing/item commonly used with scam cases.", imageUrl: "https://placehold.co/80x80/4B0082/FFFFFF?text=Common" },
+            { text: "Suspicious deleted items.", imageUrl: "https://placehold.co/80x80/4682B4/FFFFFF?text=Deleted" },
+            // Expanded phrases (general comments)
+            { text: "Hello there!", imageUrl: "https://placehold.co/80x80/FFB6C1/000000?text=Hello" },
+            { text: "Great point.", imageUrl: "https://placehold.co/80x80/F08080/FFFFFF?text=Great" },
+            { text: "I agree.", imageUrl: "https://placehold.co/80x80/FA8072/FFFFFF?text=Agree" },
+            { text: "Thanks for sharing.", imageUrl: "https://placehold.co/80x80/E9967A/FFFFFF?text=Thanks" },
+            { text: "Well said!", imageUrl: "https://placehold.co/80x80/CD5C5C/FFFFFF?text=Well+Said" },
+            { text: "Looking forward to more.", imageUrl: "https://placehold.co/80x80/DC143C/FFFFFF?text=More" },
+            { text: "Excellent post.", imageUrl: "https://placehold.co/80x80/C71585/FFFFFF?text=Excell" },
+            { text: "This is insightful.", imageUrl: "https://placehold.co/80x80/DB7093/FFFFFF?text=Insight" },
+            { text: "Couldn't agree more.", imageUrl: "https://placehold.co/80x80/FF1493/FFFFFF?text=Agree" },
+            { text: "Much appreciated.", imageUrl: "https://placehold.co/80x80/FF69B4/FFFFFF?text=Apprec" },
+            { text: "Very helpful.", imageUrl: "https://placehold.co/80x80/FFB6C1/000000?text=Helpful" },
+            { text: "Thought-provoking.", imageUrl: "https://placehold.co/80x80/F08080/FFFFFF?text=Thought" },
+            { text: "Cheers!", imageUrl: "https://placehold.co/80x80/FA8072/FFFFFF?text=Cheers" },
+            { text: "Have a great day!", imageUrl: "https://placehold.co/80x80/E9967A/FFFFFF?text=Day" },
+            { text: "I'm curious about...", imageUrl: "https://placehold.co/80x80/CD5C5C/FFFFFF?text=Curious" },
+            { text: "This resonates with me.", imageUrl: "https://placehold.co/80x80/DC143C/FFFFFF?text=Resonate" },
+            { text: "So true!", imageUrl: "https://placehold.co/80x80/C71585/FFFFFF?text=True" },
+            { text: "Amazing content.", imageUrl: "https://placehold.co/80x80/DB7093/FFFFFF?text=Amazing" },
+            { text: "Inspiring!", imageUrl: "https://placehold.co/80x80/FF1493/FFFFFF?text=Inspire" },
+            { text: "Thanks for the read.", imageUrl: "https://placehold.co/80x80/FF69B4/FFFFFF?text=Read" },
+            { text: "Appreciate your effort.", imageUrl: "https://placehold.co/80x80/FFB6C1/000000?text=Effort" },
+            { text: "Very well written.", imageUrl: "https://placehold.co/80x80/F08080/FFFFFF?text=Written" },
+            { text: "Spot on!", imageUrl: "https://placehold.co/80x80/FA8072/FFFFFF?text=Spot+On" },
+            { text: "Exactly!", imageUrl: "https://placehold.co/80x80/E9967A/FFFFFF?text=Exact" },
+            { text: "You nailed it.", imageUrl: "https://placehold.co/80x80/CD5C5C/FFFFFF?text=Nailed" },
+            { text: "Makes perfect sense.", imageUrl: "https://placehold.co/80x80/DC143C/FFFFFF?text=Sense" },
+            { text: "I'll keep this in mind.", imageUrl: "https://placehold.co/80x80/C71585/FFFFFF?text=Mind" },
+            { text: "Good job!", imageUrl: "https://placehold.co/80x80/DB7093/FFFFFF?text=Good+Job" },
+            { text: "Bravo!", imageUrl: "https://placehold.co/80x80/FF1493/FFFFFF?text=Bravo" },
+            { text: "Always learning.", imageUrl: "https://placehold.co/80x80/FF69B4/FFFFFF?text=Learn" },
+            { text: "Such a valuable resource.", imageUrl: "https://placehold.co/80x80/FFB6C1/000000?text=Valuable" },
+            { text: "Thanks again!", imageUrl: "https://placehold.co/80x80/F08080/FFFFFF?text=Thanks" },
+            { text: "Looking forward to your next post.", imageUrl: "https://placehold.co/80x80/FA8072/FFFFFF?text=Next+Post" },
+            { text: "This is exactly what I needed.", imageUrl: "https://placehold.co/80x80/E9967A/FFFFFF?text=Needed" },
+            { text: "Super helpful!", imageUrl: "https://placehold.co/80x80/CD5C5C/FFFFFF?text=Helpful" },
+            { text: "Brilliant.", imageUrl: "https://placehold.co/80x80/DC143C/FFFFFF?text=Brill" },
+            { text: "You've articulated this perfectly.", imageUrl: "https://placehold.co/80x80/C71585/FFFFFF?text=Perfect" },
+            { text: "I'm impressed.", imageUrl: "https://placehold.co/80x80/DB7093/FFFFFF?text=Impress" },
+            { text: "Kudos!", imageUrl: "https://placehold.co/80x80/FF1493/FFFFFF?text=Kudos" },
+            { text: "Wishing you all the best.", imageUrl: "https://placehold.co/80x80/FF69B4/FFFFFF?text=Best" }
         ];
 
         const commentOutput = document.getElementById('commentOutput');
@@ -143,16 +197,30 @@
         function createWordButtons() {
             // Clear existing buttons before creating new ones
             wordButtonsContainer.innerHTML = ''; 
-            predefinedWords.forEach(word => {
+            predefinedWords.forEach(item => { // Iterate over objects
                 const button = document.createElement('button');
-                button.textContent = word;
                 button.className = 'word-button';
                 
+                if (item.imageUrl) {
+                    const img = document.createElement('img');
+                    img.src = item.imageUrl;
+                    img.alt = item.text; // Alt text for accessibility
+                    img.onerror = function() {
+                        this.onerror = null; // Prevent infinite loop
+                        this.src = 'https://placehold.co/80x80/CCCCCC/000000?text=Error'; // Fallback image
+                    };
+                    button.appendChild(img);
+                }
+
+                const textSpan = document.createElement('span');
+                textSpan.textContent = item.text;
+                button.appendChild(textSpan);
+                
                 button.addEventListener('click', () => {
-                    if (commentOutput.value.length > 0 && !commentOutput.value.endsWith(' ') && !word.startsWith(',') && !word.startsWith('.')) {
+                    if (commentOutput.value.length > 0 && !commentOutput.value.endsWith(' ') && !item.text.startsWith(',') && !item.text.startsWith('.')) {
                         commentOutput.value += ' ';
                     }
-                    commentOutput.value += word;
+                    commentOutput.value += item.text;
                     commentOutput.scrollTop = commentOutput.scrollHeight;
                 });
                 wordButtonsContainer.appendChild(button);
@@ -190,3 +258,4 @@
     </script>
 </body>
 </html>
+
