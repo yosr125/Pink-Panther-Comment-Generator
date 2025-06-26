@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click-to-Comment Builder</title>
+    <title>Pink Panther Comment Builder</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Light gray background */
+            background-color: #FCE4EC; /* Brighter, muted pink background */
         }
         .container {
             max-width: 900px;
@@ -21,12 +21,28 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         .word-button {
-            @apply bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
+            /* Base styles for buttons */
+            background-color: #EC407A; /* Brighter, muted rose pink */
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.2s ease-in-out;
+            transform: scale(1);
+            outline: none;
             min-width: 100px; /* Ensure buttons have a minimum width */
             margin: 0.5rem; /* Add margin around buttons */
         }
+        .word-button:hover {
+            background-color: #D81B60; /* Slightly deeper on hover */
+            transform: scale(1.05);
+        }
+        .word-button:focus {
+            box-shadow: 0 0 0 2px rgba(236, 64, 122, 0.5); /* Focus ring for the new pink */
+        }
         .control-button {
-            @apply bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75;
+            @apply bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75;
         }
         textarea {
             @apply resize-y; /* Allow vertical resizing */
@@ -38,7 +54,7 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #4CAF50; /* Green */
+            background-color: #20c997; /* Soft Teal for success */
             color: white;
             padding: 10px 20px;
             border-radius: 8px;
@@ -54,11 +70,17 @@
 </head>
 <body class="p-4">
     <div class="container">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Comment Builder</h1>
+        <div class="flex items-center justify-center mb-6">
+            <!-- Decorative Pink Panther placeholder image -->
+            <img src="https://placehold.co/60x60/FF69B4/FFFFFF?text=PP" alt="Pink Panther Icon" class="mr-3 rounded-full">
+            <h1 class="text-3xl font-bold text-center text-gray-800">Comment Builder</h1>
+            <!-- Decorative Paw Print -->
+            <img src="https://placehold.co/60x60/FFC0CB/000000?text=Paw" alt="Decorative Paw Print" class="ml-3 rounded-full">
+        </div>
 
         <!-- Text Area for Compiled Comment -->
         <textarea id="commentOutput"
-                  class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-lg"
+                  class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-gray-700 text-lg"
                   placeholder="Click words below to build your comment..."
                   readonly></textarea>
 
@@ -74,12 +96,18 @@
         </div>
     </div>
 
+    <!-- Pink Panther image at the bottom -->
+    <div class="flex justify-center mt-8">
+        <img src="png-transparent-inspector-clouseau-the-pink-panther-high-definition-television-desktop-pantera-television-cartoon-fictional-character (1).png" 
+             alt="Pink Panther relaxing" 
+             class="w-48 h-auto object-contain rounded-lg shadow-lg">
+    </div>
+
     <!-- Message Box for Copy Confirmation -->
     <div id="messageBox" class="message-box"></div>
 
     <script>
         // Array of predefined words and phrases
-        // YOU CAN EDIT THIS ARRAY WITH YOUR OWN WORDS AND PHRASES!
         const predefinedWords = [
             "Pink Panther - scam -",
             "New account.",
@@ -95,7 +123,6 @@
             "Known scam pattern.",
             "Listing/item commonly used with scam cases.",
             "Suspicious deleted items."
-            // Add or remove phrases here, each enclosed in double quotes and separated by a comma.
         ];
 
         const commentOutput = document.getElementById('commentOutput');
@@ -111,7 +138,7 @@
             if (type === 'error') {
                 messageBox.style.backgroundColor = '#f44336'; // Red for error
             } else {
-                messageBox.style.backgroundColor = '#4CAF50'; // Green for success
+                messageBox.style.backgroundColor = '#20c997'; // Soft Teal for success
             }
 
             setTimeout(() => {
@@ -121,20 +148,19 @@
 
         // Function to create and append word buttons
         function createWordButtons() {
-            // Clear existing buttons before creating new ones (useful if array changes)
+            // Clear existing buttons before creating new ones
             wordButtonsContainer.innerHTML = ''; 
             predefinedWords.forEach(word => {
                 const button = document.createElement('button');
                 button.textContent = word;
-                button.className = 'word-button'; // Apply Tailwind classes
+                button.className = 'word-button';
+                
                 button.addEventListener('click', () => {
-                    // Add a space before appending if the textarea isn't empty
-                    // and the new word doesn't start with punctuation that typically follows text
                     if (commentOutput.value.length > 0 && !commentOutput.value.endsWith(' ') && !word.startsWith(',') && !word.startsWith('.')) {
                         commentOutput.value += ' ';
                     }
                     commentOutput.value += word;
-                    commentOutput.scrollTop = commentOutput.scrollHeight; // Scroll to bottom
+                    commentOutput.scrollTop = commentOutput.scrollHeight;
                 });
                 wordButtonsContainer.appendChild(button);
             });
@@ -149,7 +175,6 @@
         // Event listener for Copy button
         copyButton.addEventListener('click', () => {
             if (commentOutput.value) {
-                // Use document.execCommand('copy') for better iframe compatibility
                 const tempInput = document.createElement('textarea');
                 tempInput.value = commentOutput.value;
                 document.body.appendChild(tempInput);
@@ -168,7 +193,6 @@
             }
         });
 
-        // Initialize the app when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', createWordButtons);
     </script>
 </body>
