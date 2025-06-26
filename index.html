@@ -98,7 +98,7 @@
 
     <!-- Pink Panther image at the bottom -->
     <div class="flex justify-center mt-8">
-        <img src="png-transparent-inspector-clouseau-the-pink-panther-high-definition-television-desktop-pantera-television-cartoon-fictional-character (1).png" 
+        <img src="mea.png" 
              alt="Pink Panther relaxing" 
              class="w-48 h-auto object-contain rounded-lg shadow-lg">
     </div>
@@ -108,7 +108,6 @@
 
     <script>
         // Array of predefined words and phrases
-        // This array now contains only the text phrases, no image URLs on buttons
         const predefinedWords = [
             "Pink Panther - scam -",
             "New account.",
@@ -151,9 +150,9 @@
         function createWordButtons() {
             // Clear existing buttons before creating new ones
             wordButtonsContainer.innerHTML = ''; 
-            predefinedWords.forEach(word => { // Iterate over strings
+            predefinedWords.forEach(word => {
                 const button = document.createElement('button');
-                button.textContent = word; // Set button text directly
+                button.textContent = word;
                 button.className = 'word-button';
                 
                 button.addEventListener('click', () => {
@@ -198,5 +197,3 @@
     </script>
 </body>
 </html>
-
-
