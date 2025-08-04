@@ -19,8 +19,10 @@
             border-radius: 1rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+        .category-title {
+            @apply text-xl font-semibold text-gray-800 mt-6 mb-3 border-b-2 border-pink-300 pb-1;
+        }
         .word-button {
-            /* Base styles for buttons */
             background-color: #EC407A; /* Brighter, muted rose pink */
             color: white;
             font-weight: 600;
@@ -30,8 +32,9 @@
             transition: all 0.2s ease-in-out;
             transform: scale(1);
             outline: none;
-            min-width: 100px; /* Ensure buttons have a minimum width */
-            margin: 0.5rem; /* Add margin around buttons */
+            min-width: 100px;
+            margin: 0.5rem;
+            cursor: pointer; /* Indicate it's clickable */
         }
         .word-button:hover {
             background-color: #D81B60; /* Slightly deeper on hover */
@@ -44,10 +47,9 @@
             @apply bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75;
         }
         textarea {
-            @apply resize-y; /* Allow vertical resizing */
-            min-height: 120px; /* Minimum height for the textarea */
+            @apply resize-y;
+            min-height: 120px;
         }
-        /* Message box for copy confirmation */
         .message-box {
             position: fixed;
             bottom: 20px;
@@ -65,36 +67,51 @@
         .message-box.show {
             opacity: 1;
         }
-        /* Styling for the image at the bottom */
         .bottom-image {
-            display: block; /* Ensures it takes its own line */
-            margin: 2rem auto; /* Centers the image and adds space */
-            max-width: 50%; /* Made the image smaller */
-            height: auto; /* Maintains aspect ratio */
-            border-radius: 0.5rem; /* Slightly rounded corners for the image */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the image */
+            display: block;
+            margin: 2rem auto;
+            max-width: 50%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .custom-input-group {
+            @apply flex items-center mt-4 mb-6;
+        }
+        .custom-input {
+            @apply flex-grow p-2 border border-gray-300 rounded-l-lg focus:ring-pink-500 focus:border-pink-500 text-gray-700;
+        }
+        .custom-add-button {
+            @apply bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-r-lg shadow-md transition-all duration-200 ease-in-out;
         }
     </style>
 </head>
 <body class="p-4">
     <div class="container">
         <div class="flex items-center justify-center mb-6">
-            <img src="https://placehold.co/60x60/FF69B4/FFFFFF?text=PP" alt="Pink Panther Icon" class="mr-3 rounded-full">
-            <h1 class="text-3xl font-bold text-center text-gray-800">Comment Builder</h1>
-            <img src="https://placehold.co/60x60/FFC0CB/000000?text=Paw" alt="Decorative Paw Print" class="ml-3 rounded-full">
+            <img src="https://via.placeholder.com/60x60/FF69B4/FFFFFF?text=🐾" alt="Pink Panther Icon" class="mr-3 rounded-full">
+            <h1 class="text-3xl font-bold text-center text-gray-800">Pink Panther Comment Builder</h1>
+            <img src="https://via.placeholder.com/60x60/FFC0CB/000000?text=🔍" alt="Decorative Magnifying Glass Icon" class="ml-3 rounded-full">
         </div>
 
         <textarea id="commentOutput"
                   class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-gray-700 text-lg"
-                  placeholder="Click words below to build your comment..."
+                  placeholder="Click words below or type in custom text to build your comment..."
                   readonly></textarea>
 
         <div class="flex justify-center space-x-4 mb-8">
+            <button id="undoButton" class="control-button bg-orange-500 hover:bg-orange-600">Undo Last Word</button>
+            <button id="deleteLastButton" class="control-button bg-red-500 hover:bg-red-600">Delete Last Word</button>
             <button id="clearButton" class="control-button">Clear Comment</button>
             <button id="copyButton" class="control-button">Copy to Clipboard</button>
         </div>
 
-        <div id="wordButtonsContainer" class="flex flex-wrap justify-center gap-3">
+        <div class="custom-input-group">
+            <input type="text" id="customInput" class="custom-input" placeholder="Add custom text or phrase">
+            <button id="addCustomButton" class="custom-add-button">Add Custom</button>
+        </div>
+
+        <div id="categoryButtonsContainer">
             </div>
     </div>
 
@@ -103,91 +120,21 @@
     <img src="mea.png" alt="Pink Panther Character" class="bottom-image">
 
     <script>
-        // Array of predefined words and phrases
-        const predefinedWords = [
-            "Pink Panther - scam -",
-            "New account.",
-            "Suspicious listings.",
-            "Listing taken from the web.",
-            "Malicious IP.",
-            "Carrier suspected fraud.",
-            "Suspicious drop off point.",
-            "Non responsive member.",
-            "1st High value TX.",
-            "Suspicious fingerprints.",
-            "Signs of label manipulation.",
-            "Known scam pattern.",
-            "Listing/item commonly used with scam cases.",
-            "Suspicious deleted items.",
-            "Item retail price doesn't match.",
-            "Member inactive since TX creation."
-        ];
-
-        const commentOutput = document.getElementById('commentOutput');
-        const wordButtonsContainer = document.getElementById('wordButtonsContainer');
-        const clearButton = document.getElementById('clearButton');
-        const copyButton = document.getElementById('copyButton');
-        const messageBox = document.getElementById('messageBox');
-
-        // Function to display a temporary message
-        function showMessage(message, type = 'success') {
-            messageBox.textContent = message;
-            messageBox.className = 'message-box show'; // Reset classes and show
-            if (type === 'error') {
-                messageBox.style.backgroundColor = '#f44336'; // Red for error
-            } else {
-                messageBox.style.backgroundColor = '#20c997'; // Soft Teal for success
-            }
-
-            setTimeout(() => {
-                messageBox.classList.remove('show');
-            }, 2000); // Message disappears after 2 seconds
-        }
-
-        // Function to create and append word buttons
-        function createWordButtons() {
-            // Clear existing buttons before creating new ones
-            wordButtonsContainer.innerHTML = '';
-            predefinedWords.forEach(word => {
-                const button = document.createElement('button');
-                button.textContent = word;
-                button.className = 'word-button';
-                
-                button.addEventListener('click', () => {
-                    if (commentOutput.value.length > 0 && !commentOutput.value.endsWith(' ') && !word.startsWith(',') && !word.startsWith('.')) {
-                        commentOutput.value += ' ';
-                    }
-                    commentOutput.value += word;
-                    commentOutput.scrollTop = commentOutput.scrollHeight;
-                });
-                wordButtonsContainer.appendChild(button);
-            });
-        }
-
-        // Event listener for Clear button
-        clearButton.addEventListener('click', () => {
-            commentOutput.value = '';
-            showMessage('Comment cleared!', 'success');
-        });
-
-        // Event listener for Copy button
-        copyButton.addEventListener('click', () => {
-            if (commentOutput.value) {
-                // Use the modern Clipboard API
-                navigator.clipboard.writeText(commentOutput.value)
-                    .then(() => {
-                        showMessage('Comment copied to clipboard!', 'success');
-                    })
-                    .catch(err => {
-                        console.error('Failed to copy text: ', err);
-                        showMessage('Failed to copy comment.', 'error');
-                    });
-            } else {
-                showMessage('Nothing to copy!', 'error');
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', createWordButtons);
-    </script>
+        // Categorized predefined words and phrases
+        const predefinedCategories = {
+            "Fraud Indicators": [
+                "Pink Panther - scam - Do Not Unblock!", // Updated phrase
+                "Malicious IP.",
+                "Carrier suspected fraud.",
+                "Suspicious drop off point.",
+                "Known scam pattern.",
+                "Signs of label manipulation.",
+                "Suspicious fingerprints.",
+                "Suspicious Tracking.",           // New phrase
+                "Suspicious Transaction history.",// New phrase
+                "Suspicious Chat log."            // New phrase
+            ],
+            "Account Status":
 </body>
 </html>
+
