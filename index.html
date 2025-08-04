@@ -1,10 +1,3 @@
-Got it, here's the updated code for your Pink Panther Comment Builder, incorporating the modern navigator.clipboard.writeText() API and a preview of how it would look.
-
-Updated Pink Panther Comment Builder Code 💻
-Here's the full HTML code for your comment builder. Save this as an .html file (e.g., index.html) and ensure your mea.png image is in the same directory for it to display correctly.
-
-HTML
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,3 +83,111 @@ HTML
             <h1 class="text-3xl font-bold text-center text-gray-800">Comment Builder</h1>
             <img src="https://placehold.co/60x60/FFC0CB/000000?text=Paw" alt="Decorative Paw Print" class="ml-3 rounded-full">
         </div>
+
+        <textarea id="commentOutput"
+                  class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-gray-700 text-lg"
+                  placeholder="Click words below to build your comment..."
+                  readonly></textarea>
+
+        <div class="flex justify-center space-x-4 mb-8">
+            <button id="clearButton" class="control-button">Clear Comment</button>
+            <button id="copyButton" class="control-button">Copy to Clipboard</button>
+        </div>
+
+        <div id="wordButtonsContainer" class="flex flex-wrap justify-center gap-3">
+            </div>
+    </div>
+
+    <div id="messageBox" class="message-box"></div>
+
+    <img src="mea.png" alt="Pink Panther Character" class="bottom-image">
+
+    <script>
+        // Array of predefined words and phrases
+        const predefinedWords = [
+            "Pink Panther - scam -",
+            "New account.",
+            "Suspicious listings.",
+            "Listing taken from the web.",
+            "Malicious IP.",
+            "Carrier suspected fraud.",
+            "Suspicious drop off point.",
+            "Non responsive member.",
+            "1st High value TX.",
+            "Suspicious fingerprints.",
+            "Signs of label manipulation.",
+            "Known scam pattern.",
+            "Listing/item commonly used with scam cases.",
+            "Suspicious deleted items.",
+            "Item retail price doesn't match.",
+            "Member inactive since TX creation."
+        ];
+
+        const commentOutput = document.getElementById('commentOutput');
+        const wordButtonsContainer = document.getElementById('wordButtonsContainer');
+        const clearButton = document.getElementById('clearButton');
+        const copyButton = document.getElementById('copyButton');
+        const messageBox = document.getElementById('messageBox');
+
+        // Function to display a temporary message
+        function showMessage(message, type = 'success') {
+            messageBox.textContent = message;
+            messageBox.className = 'message-box show'; // Reset classes and show
+            if (type === 'error') {
+                messageBox.style.backgroundColor = '#f44336'; // Red for error
+            } else {
+                messageBox.style.backgroundColor = '#20c997'; // Soft Teal for success
+            }
+
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 2000); // Message disappears after 2 seconds
+        }
+
+        // Function to create and append word buttons
+        function createWordButtons() {
+            // Clear existing buttons before creating new ones
+            wordButtonsContainer.innerHTML = '';
+            predefinedWords.forEach(word => {
+                const button = document.createElement('button');
+                button.textContent = word;
+                button.className = 'word-button';
+                
+                button.addEventListener('click', () => {
+                    if (commentOutput.value.length > 0 && !commentOutput.value.endsWith(' ') && !word.startsWith(',') && !word.startsWith('.')) {
+                        commentOutput.value += ' ';
+                    }
+                    commentOutput.value += word;
+                    commentOutput.scrollTop = commentOutput.scrollHeight;
+                });
+                wordButtonsContainer.appendChild(button);
+            });
+        }
+
+        // Event listener for Clear button
+        clearButton.addEventListener('click', () => {
+            commentOutput.value = '';
+            showMessage('Comment cleared!', 'success');
+        });
+
+        // Event listener for Copy button
+        copyButton.addEventListener('click', () => {
+            if (commentOutput.value) {
+                // Use the modern Clipboard API
+                navigator.clipboard.writeText(commentOutput.value)
+                    .then(() => {
+                        showMessage('Comment copied to clipboard!', 'success');
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy text: ', err);
+                        showMessage('Failed to copy comment.', 'error');
+                    });
+            } else {
+                showMessage('Nothing to copy!', 'error');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', createWordButtons);
+    </script>
+</body>
+</html>
