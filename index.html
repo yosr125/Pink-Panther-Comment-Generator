@@ -1,3 +1,10 @@
+Got it, here's the updated code for your Pink Panther Comment Builder, incorporating the modern navigator.clipboard.writeText() API and a preview of how it would look.
+
+Updated Pink Panther Comment Builder Code 💻
+Here's the full HTML code for your comment builder. Save this as an .html file (e.g., index.html) and ensure your mea.png image is in the same directory for it to display correctly.
+
+HTML
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,9 +50,43 @@
         .control-button {
             @apply bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75;
         }
-        #deleteSelectedButton { /* Specific style for the new delete button */
-            background-color: #EF4444; /* Red color */
-            @apply hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75;
-        }
         textarea {
-            @apply resize-y;
+            @apply resize-y; /* Allow vertical resizing */
+            min-height: 120px; /* Minimum height for the textarea */
+        }
+        /* Message box for copy confirmation */
+        .message-box {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #20c997; /* Soft Teal for success */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .message-box.show {
+            opacity: 1;
+        }
+        /* Styling for the image at the bottom */
+        .bottom-image {
+            display: block; /* Ensures it takes its own line */
+            margin: 2rem auto; /* Centers the image and adds space */
+            max-width: 50%; /* Made the image smaller */
+            height: auto; /* Maintains aspect ratio */
+            border-radius: 0.5rem; /* Slightly rounded corners for the image */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the image */
+        }
+    </style>
+</head>
+<body class="p-4">
+    <div class="container">
+        <div class="flex items-center justify-center mb-6">
+            <img src="https://placehold.co/60x60/FF69B4/FFFFFF?text=PP" alt="Pink Panther Icon" class="mr-3 rounded-full">
+            <h1 class="text-3xl font-bold text-center text-gray-800">Comment Builder</h1>
+            <img src="https://placehold.co/60x60/FFC0CB/000000?text=Paw" alt="Decorative Paw Print" class="ml-3 rounded-full">
+        </div>
