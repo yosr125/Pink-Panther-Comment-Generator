@@ -22,9 +22,9 @@
         .category-title {
             /* Style for Category Headings */
             @apply text-xl font-bold text-gray-800 mt-6 mb-3 border-b-2 border-pink-500 pb-1; 
-            display: flex; /* Allow emoji and text to be on the same line */
-            align-items: center; /* Vertically align emoji with text */
-            gap: 0.5rem; /* Space between emoji and text */
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         .word-button {
             background-color: #EC407A; /* Brighter, muted rose pink */
@@ -39,30 +39,31 @@
             min-width: 100px;
             margin: 0.5rem;
             cursor: pointer;
-            display: flex; /* Added for emoji alignment */
-            align-items: center; /* Added for emoji alignment */
-            gap: 0.3rem; /* Space between emoji and text on button */
-            justify-content: center; /* Center content on button */
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            justify-content: center;
         }
         .word-button:hover {
             background-color: #D81B60; /* Slightly deeper on hover */
-            transform: scale(1.03); /* Slight change to hover scale for better feel */
+            transform: scale(1.03);
         }
         .word-button:focus {
             box-shadow: 0 0 0 2px rgba(236, 64, 122, 0.5);
         }
         .control-button {
             @apply text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75;
-            display: flex; /* Added for emoji alignment */
-            align-items: center; /* Added for emoji alignment */
-            gap: 0.3rem; /* Space between emoji and text on button */
-            justify-content: center; /* Center content on button */
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            justify-content: center;
         }
         /* Specific colors for control buttons */
         #clearButton, #copyButton { @apply bg-purple-600 hover:bg-purple-700 focus:ring-purple-500; }
         #undoButton { @apply bg-orange-500 hover:bg-orange-600 focus:ring-orange-500; }
         #deleteLastWordButton { @apply bg-red-500 hover:bg-red-600 focus:ring-red-500; }
         
+        /* Main Textarea Style */
         textarea {
             @apply resize-y;
             min-height: 120px;
@@ -91,16 +92,23 @@
             border-radius: 0.5rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        /* UPDATED: Custom Input Styling for a better look */
+        /* UPDATED: Custom Input Styling for better look */
         .custom-input-group {
+            /* Changed to align-items: stretch for the multi-line textarea */
             @apply flex items-stretch mt-4 mb-6 p-2 rounded-xl border border-pink-300 shadow-lg bg-pink-50;
         }
-        .custom-input {
-            @apply flex-grow p-3 border-none bg-transparent text-gray-800 placeholder-gray-500 focus:ring-0 text-base;
+        .custom-input-container {
+            flex-grow: 1; /* Allows the textarea to take up most space */
+        }
+        .custom-input-textarea {
+            /* Changed to textarea styling */
+            @apply w-full p-2 border-none bg-transparent text-gray-800 placeholder-gray-500 focus:ring-0 text-base resize-none;
+            min-height: 80px; /* Made the area taller */
             font-size: 1rem;
         }
         .custom-add-button {
-            @apply bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out;
+            /* Added self-stretch to match the height of the container */
+            @apply bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out self-stretch flex items-center;
         }
     </style>
 </head>
@@ -125,8 +133,10 @@
         </div>
 
         <div class="custom-input-group">
-            <input type="text" id="customInput" class="custom-input" placeholder="Type custom phrase or note here...">
-            <button id="addCustomButton" class="custom-add-button">✍️ Add Custom</button>
+            <div class="custom-input-container">
+                <textarea id="customInput" class="custom-input-textarea" placeholder="Type custom phrase or note here..."></textarea>
+            </div>
+            <button id="addCustomButton" class="custom-add-button">✅ Add Custom</button> 
         </div>
         
         <div id="categoryButtonsContainer">
@@ -138,12 +148,11 @@
     <img src="mea.png" alt="Pink Panther Character" class="bottom-image">
 
     <script>
-        // UPDATED: Categorized predefined words and phrases, with fixes and moves
         const predefinedCategories = {
             "🕵️‍♀️ Fraud Indicators": [
                 "⚠️ Pink Panther - scam - Do Not Unblock!",
-                "⚠️ Empty Parcel Scam.", // FIXED: Separate sentence
-                "⚠️ Pattern Potential Fraudulent member. Please proceed with caution and investigate thoroughly if a similar issue occurs.", // FIXED: Separate sentence & typo
+                "⚠️ Empty Parcel Scam.", 
+                "⚠️ Pattern Potential Fraudulent member. Please proceed with caution and investigate thoroughly if a similar issue occurs.", 
                 "⚠️ Malicious IP.",
                 "⚠️ Carrier suspected fraud.",
                 "⚠️ Known scam pattern.",
@@ -166,8 +175,8 @@
                 "👤 Username, Member's name and Email do not match.",
                 "👤 Over 3 Months Gap between transactions.",
                 "👤 Too many shipping addresses with diffrent details.",
-                "👤 Using VPNs to mask their location.", // FIXED: Typo VPS -> VPNs
-                "👤 Phone number code doesn't match the area." // MOVED HERE
+                "👤 Using VPNs to mask their location.", 
+                "👤 Phone number code doesn't match the area."
             ],
             "📦 Item & Listing Issues": [
                 "🏷️ Suspicious listings.",
@@ -179,7 +188,7 @@
                 "🏷️ Listings are cropped.",
                 "🏷️ Too many duplicate listings.",
                 "🏷️ Item presumably lost or damaged is relisted.",
-                "🏷️ Same listings found on another account." // MOVED HERE
+                "🏷️ Same listings found on another account." 
             ],
             "🚚 Shipping & Parcel Status": [
                 "✈️ Suspicious drop off point.",
@@ -197,11 +206,10 @@
         const copyButton = document.getElementById('copyButton');
         const undoButton = document.getElementById('undoButton');
         const deleteLastWordButton = document.getElementById('deleteLastWordButton');
-        const customInput = document.getElementById('customInput');
+        const customInput = document.getElementById('customInput'); // Now refers to the TEXTAREA
         const addCustomButton = document.getElementById('addCustomButton');
         const messageBox = document.getElementById('messageBox');
 
-        // History stack to support the Undo function
         let historyStack = [];
         const MAX_HISTORY = 20;
 
@@ -244,7 +252,6 @@
                 predefinedCategories[category].forEach(wordWithEmoji => {
                     const button = document.createElement('button');
                     
-                    // The word (phrase) is the content AFTER the emoji and space
                     const word = wordWithEmoji.substring(wordWithEmoji.indexOf(' ') + 1);
 
                     button.innerHTML = wordWithEmoji; 
@@ -293,6 +300,7 @@
             }
         });
 
+        // The logic for the custom input remains the same, but it now works with a textarea
         addCustomButton.addEventListener('click', () => {
             const customText = customInput.value.trim();
             if (customText) {
@@ -312,10 +320,15 @@
         });
         
         customInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+            // Note: Since it's a textarea, we don't preventDefault for 'Enter' unless we specifically want to
+            // treat 'Enter' as 'Add Custom'. For multi-line input, it's often better to require the button click.
+            // If you *do* want 'Enter' to submit, uncomment the block below.
+            /*
+            if (e.key === 'Enter' && !e.shiftKey) { // Allow Shift+Enter for newline
                 e.preventDefault();
                 addCustomButton.click();
             }
+            */
         });
 
         clearButton.addEventListener('click', () => {
