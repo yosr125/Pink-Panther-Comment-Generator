@@ -13,12 +13,12 @@
             background-color: #FCE4EC; /* Light, soft pink background */
         }
         .container {
-            max-width: 900px; /* Reverting to original width */
+            max-width: 1200px; 
             margin: 2rem auto;
-            padding: 2rem;
+            padding: 2.5rem; 
             background-color: #ffffff;
-            border-radius: 1.5rem; /* Cuter, rounder corners */
-            box-shadow: 0 15px 25px -5px rgba(236, 64, 122, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Soft pink shadow */
+            border-radius: 1.5rem; 
+            box-shadow: 0 15px 25px -5px rgba(236, 64, 122, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
         }
         .category-title {
             @apply text-xl font-bold text-gray-800 mt-6 mb-3 border-b-2 border-pink-500 pb-1; 
@@ -70,29 +70,29 @@
         #undoButton { @apply bg-orange-500 hover:bg-orange-600 focus:ring-orange-500; }
         #deleteLastWordButton { @apply bg-red-500 hover:bg-red-600 focus:ring-red-500; }
 
-        /* KEYFRAME FOR THE PULSING GLOW EFFECT */
+        /* KEYFRAME FOR THE PERMANENT PULSING GLOW EFFECT */
         @keyframes pulse-ring {
             0%, 100% {
-                box-shadow: 0 0 0 0px rgba(236, 64, 122, 0.5); /* pink-500, subtle initial glow */
+                box-shadow: 0 0 0 0px rgba(236, 64, 122, 0.5); 
             }
             50% {
-                box-shadow: 0 0 0 8px rgba(236, 64, 122, 0); /* fades out */
+                box-shadow: 0 0 0 8px rgba(236, 64, 122, 0); 
             }
         }
 
         /* COHESIVE INPUT GROUP STYLING (The Pink Wrapper) */
         .input-group-pink {
-            /* Applied to both the Filter and Custom Input wrappers */
-            @apply flex items-stretch p-3 rounded-xl border-4 border-pink-500 bg-pink-100 mb-6 w-full; /* Increased padding and margin for space */
-            animation: pulse-ring 2s infinite ease-in-out; /* The permanent flashing effect */
+            @apply flex items-stretch p-3 rounded-xl border-4 border-pink-500 bg-pink-100 mb-8 w-full; 
+            animation: pulse-ring 2s infinite ease-in-out; 
         }
         
         /* Custom Input Field (White field inside pink wrapper) */
         .custom-input { 
+            /* **KEY CHANGE**: Increased flex-grow from 4 to 6 for wider input field */
             @apply w-full flex-grow p-3 border-none ring-0 focus:ring-0 focus:border-transparent bg-white text-gray-800 placeholder-gray-500 text-base rounded-lg;
             font-size: 1rem;
             min-width: 0; 
-            flex-grow: 4;
+            flex-grow: 6; /* Takes up more space */
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
         
@@ -102,12 +102,12 @@
                    text-pink-800 font-bold py-2 px-4 rounded-lg
                    transition-all duration-200 ease-in-out
                    self-stretch flex items-center gap-2;
-            flex-grow: 1;
+            flex-grow: 1; /* Retained at 1 to emphasize the input field's size increase */
             min-width: 150px;
             margin-left: 0.5rem; 
         }
         .custom-add-button:hover {
-            @apply bg-white border-pink-500 text-pink-700 transform scale-100; /* Removed scale for consistency with animation */
+            @apply bg-white border-pink-500 text-pink-700 transform scale-100; 
         }
 
         /* Filter Input Style (White field inside pink wrapper) */
@@ -238,6 +238,7 @@
         }
 
         function showMessage(message, type = 'success') {
+            const messageBox = document.getElementById('messageBox');
             messageBox.textContent = message;
             messageBox.className = 'message-box show';
             messageBox.style.backgroundColor = (type === 'error') ? '#f44336' : '#20c997'; 
@@ -249,7 +250,6 @@
 
         // === FEATURE: AUTO-GROW TEXTAREA ===
         function autoGrow(element) {
-            // Set height to 'auto' to recalculate scroll height, then set height to scroll height
             element.style.height = 'auto';
             element.style.height = element.scrollHeight + 'px';
         }
@@ -383,7 +383,6 @@
 
         // === FEATURE: KEYBOARD SHORTCUT (Alt+C) ===
         document.addEventListener('keydown', (e) => {
-            // Check for Alt + C (or Option + C on Mac)
             if (e.altKey && (e.key === 'c' || e.key === 'C')) {
                 e.preventDefault();
                 customInput.focus();
