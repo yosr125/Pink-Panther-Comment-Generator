@@ -93,16 +93,17 @@
         }
         /* Custom Input Styling */
         .custom-input-group {
+            /* Ensures flex items (input and button) stretch to container height */
             @apply flex items-stretch mt-4 mb-6 p-2 rounded-xl border border-pink-300 shadow-lg bg-pink-50;
         }
         .custom-input { 
+            /* UPDATED: Removed fixed height, relies on padding/flex for visual height */
             @apply flex-grow p-3 border-none bg-transparent text-gray-800 placeholder-gray-500 focus:ring-0 text-base;
             font-size: 1rem;
-            height: 50px; /* Taller height */
             min-width: 0; 
         }
         .custom-add-button {
-            @apply bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out self-stretch flex items-center;
+            @apply bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out self-stretch flex items-center gap-2;
         }
     </style>
 </head>
@@ -126,7 +127,7 @@
 
         <div class="custom-input-group">
             <input type="text" id="customInput" class="custom-input" placeholder="Type custom phrase or note here...">
-            <button id="addCustomButton" class="custom-add-button">Add Custom</button>
+            <button id="addCustomButton" class="custom-add-button">📌 Your own words</button>
         </div>
         
         <div id="categoryButtonsContainer">
