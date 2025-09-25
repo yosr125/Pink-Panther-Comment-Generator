@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🕵️‍♀️🐾 Pink Panther Comment Builder</title> <script src="https://cdn.tailwindcss.com"></script>
+    <title>🕵️‍♀️🐾 Pink Panther Comment Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -19,7 +20,7 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         .category-title {
-            /* New Style for Category Headings */
+            /* Style for Category Headings */
             @apply text-xl font-bold text-gray-800 mt-6 mb-3 border-b-2 border-pink-500 pb-1; 
             display: flex; /* Allow emoji and text to be on the same line */
             align-items: center; /* Vertically align emoji with text */
@@ -90,15 +91,16 @@
             border-radius: 0.5rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        /* Custom Input Styling */
+        /* UPDATED: Custom Input Styling for a better look */
         .custom-input-group {
-            @apply flex items-stretch mt-4 mb-6;
+            @apply flex items-stretch mt-4 mb-6 p-2 rounded-xl border border-pink-300 shadow-lg bg-pink-50;
         }
         .custom-input {
-            @apply flex-grow p-2 border border-gray-300 rounded-l-lg focus:ring-pink-500 focus:border-pink-500 text-gray-700;
+            @apply flex-grow p-3 border-none bg-transparent text-gray-800 placeholder-gray-500 focus:ring-0 text-base;
+            font-size: 1rem;
         }
         .custom-add-button {
-            @apply bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded-r-lg shadow-md transition-all duration-200 ease-in-out;
+            @apply bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out;
         }
     </style>
 </head>
@@ -106,7 +108,8 @@
     <div class="container">
         <div class="flex items-center justify-center mb-6">
             <img src="https://via.placeholder.com/60x60/FF69B4/FFFFFF?text=🐾" alt="Pink Panther Icon" class="mr-3 rounded-full">
-            <h1 class="text-3xl font-bold text-center text-gray-800">🕵️‍♀️ Pink Panther Comment Builder 🐾</h1> <img src="https://via.placeholder.com/60x60/FFC0CB/000000?text=🔍" alt="Decorative Magnifying Glass Icon" class="ml-3 rounded-full">
+            <h1 class="text-3xl font-bold text-center text-gray-800">🕵️‍♀️ Pink Panther Comment Builder 🐾</h1>
+            <img src="https://via.placeholder.com/60x60/FFC0CB/000000?text=🔍" alt="Decorative Magnifying Glass Icon" class="ml-3 rounded-full">
         </div>
 
         <textarea id="commentOutput"
@@ -115,11 +118,16 @@
                     readonly></textarea>
 
         <div class="flex justify-center space-x-4 mb-8">
-            <button id="undoButton" class="control-button">↩️ Undo Last Action</button> <button id="deleteLastWordButton" class="control-button">✖️ Delete Last Word</button> <button id="clearButton" class="control-button">🧹 Clear Comment</button> <button id="copyButton" class="control-button">📋 Copy to Clipboard</button> </div>
+            <button id="undoButton" class="control-button">↩️ Undo Last Action</button>
+            <button id="deleteLastWordButton" class="control-button">✖️ Delete Last Word</button>
+            <button id="clearButton" class="control-button">🧹 Clear Comment</button>
+            <button id="copyButton" class="control-button">📋 Copy to Clipboard</button>
+        </div>
 
         <div class="custom-input-group">
-            <input type="text" id="customInput" class="custom-input" placeholder="Add custom text or phrase">
-            <button id="addCustomButton" class="custom-add-button">✍️ Add Custom</button> </div>
+            <input type="text" id="customInput" class="custom-input" placeholder="Type custom phrase or note here...">
+            <button id="addCustomButton" class="custom-add-button">✍️ Add Custom</button>
+        </div>
         
         <div id="categoryButtonsContainer">
             </div>
@@ -130,55 +138,56 @@
     <img src="mea.png" alt="Pink Panther Character" class="bottom-image">
 
     <script>
-        // UPDATED: Categorized predefined words and phrases, including all new requests
+        // UPDATED: Categorized predefined words and phrases, with fixes and moves
         const predefinedCategories = {
-            "🕵️‍♀️ Fraud Indicators": [ // EMOJI ADDED HERE
-                "Pink Panther - scam - Do Not Unblock!",
-                "Malicious IP.",
-                "Carrier suspected fraud.",
-                "Known scam pattern.",
-                "Suspicious fingerprints.",
-                "Suspicious Tracking.",
-                "Suspicious Transaction history.",
-                "Suspicious Chat log.",
-                "Empty Parcel Scam / Pattern Potential Fraudelant member. Please proceed with caution and investigate thoroughly if a similar issue occurs.", 
-                "Malicious Multiple Accounts. Buyer and Seller are the same person.", 
-                "Abuse of Compensation.", 
-                "Sending same proof in multiple TXs." 
+            "🕵️‍♀️ Fraud Indicators": [
+                "⚠️ Pink Panther - scam - Do Not Unblock!",
+                "⚠️ Empty Parcel Scam.", // FIXED: Separate sentence
+                "⚠️ Pattern Potential Fraudulent member. Please proceed with caution and investigate thoroughly if a similar issue occurs.", // FIXED: Separate sentence & typo
+                "⚠️ Malicious IP.",
+                "⚠️ Carrier suspected fraud.",
+                "⚠️ Known scam pattern.",
+                "⚠️ Suspicious fingerprints.",
+                "⚠️ Suspicious Tracking.",
+                "⚠️ Suspicious Transaction history.",
+                "⚠️ Suspicious Chat log.",
+                "⚠️ Malicious Multiple Accounts. Buyer and Seller are the same person.",
+                "⚠️ Abuse of Compensation.",
+                "⚠️ Sending same proof in multiple TXs."
             ],
-            "👤 Account & Member Behavior": [ // EMOJI ADDED HERE
-                "New account.",
-                "Non responsive member.",
-                "Member inactive since TX creation.",
-                "1st High value TX.",
-                "Member has a pattern of Lost Parcel compensation abuse.", 
-                "Member only uses Public IPs.", 
-                "Suspicious account changes.", 
-                "Username, Member's name and Email do not match.", 
-                "Over 3 Months Gap between transactions.", 
-                "Too many shipping addresses with diffrent details.", 
-                "Using VPS to mask their location." 
+            "👤 Account & Member Behavior": [
+                "👤 New account.",
+                "👤 Non responsive member.",
+                "👤 Member inactive since TX creation.",
+                "👤 1st High value TX.",
+                "👤 Member has a pattern of Lost Parcel compensation abuse.",
+                "👤 Member only uses Public IPs.",
+                "👤 Suspicious account changes.",
+                "👤 Username, Member's name and Email do not match.",
+                "👤 Over 3 Months Gap between transactions.",
+                "👤 Too many shipping addresses with diffrent details.",
+                "👤 Using VPNs to mask their location.", // FIXED: Typo VPS -> VPNs
+                "👤 Phone number code doesn't match the area." // MOVED HERE
             ],
-            "📦 Item & Listing Issues": [ // EMOJI ADDED HERE
-                "Suspicious listings.",
-                "Listing taken from the web.",
-                "Listing/item commonly used with scam cases.",
-                "Suspicious deleted items.",
-                "Item retail price doesn't match.",
-                "All High value items are canceled.", 
-                "Listings are cropped.", 
-                "Too many duplicate listings.", 
-                "Item presumably lost or damaged is relisted." 
+            "📦 Item & Listing Issues": [
+                "🏷️ Suspicious listings.",
+                "🏷️ Listing taken from the web.",
+                "🏷️ Listing/item commonly used with scam cases.",
+                "🏷️ Suspicious deleted items.",
+                "🏷️ Item retail price doesn't match.",
+                "🏷️ All High value items are canceled.",
+                "🏷️ Listings are cropped.",
+                "🏷️ Too many duplicate listings.",
+                "🏷️ Item presumably lost or damaged is relisted.",
+                "🏷️ Same listings found on another account." // MOVED HERE
             ],
-            "🚚 Shipping & Parcel Status": [ // EMOJI ADDED HERE
-                "Suspicious drop off point.",
-                "Signs of label manipulation.",
-                "Drop off point is over 2 hours away.", 
-                "Asks only for a Specific Carrier.", 
-                "No updates after drop off.", 
-                "Parcel refused.", 
-                "Same listings found on another account.", 
-                "Phone number code doesn't match the area." 
+            "🚚 Shipping & Parcel Status": [
+                "✈️ Suspicious drop off point.",
+                "✈️ Signs of label manipulation.",
+                "✈️ Drop off point is over 2 hours away.",
+                "✈️ Asks only for a Specific Carrier.",
+                "✈️ No updates after drop off.",
+                "✈️ Parcel refused."
             ]
         };
 
@@ -197,10 +206,9 @@
         const MAX_HISTORY = 20;
 
         function saveHistory() {
-            // Save state ONLY if the current value is different from the last saved state
             if (historyStack.length === 0 || historyStack[historyStack.length - 1] !== commentOutput.value) {
                 if (historyStack.length >= MAX_HISTORY) {
-                    historyStack.shift(); // Remove oldest entry
+                    historyStack.shift(); 
                 }
                 historyStack.push(commentOutput.value);
             }
@@ -211,11 +219,9 @@
             commentOutput.scrollTop = commentOutput.scrollHeight;
         }
 
-        // Function to display a temporary message
         function showMessage(message, type = 'success') {
             messageBox.textContent = message;
             messageBox.className = 'message-box show';
-            // Set colors for success/error messages
             messageBox.style.backgroundColor = (type === 'error') ? '#f44336' : '#20c997'; 
 
             setTimeout(() => {
@@ -223,44 +229,31 @@
             }, 2000);
         }
 
-        // Function to create and append categorized word buttons
         function createWordButtons() {
             categoryButtonsContainer.innerHTML = ''; 
 
             for (const category in predefinedCategories) {
-                // 1. Create Category Title
                 const title = document.createElement('h2');
-                title.innerHTML = category; // Use innerHTML to render emoji
+                title.innerHTML = category; 
                 title.className = 'category-title';
                 categoryButtonsContainer.appendChild(title);
 
-                // 2. Create Button Group Container
                 const buttonGroup = document.createElement('div');
                 buttonGroup.className = 'flex flex-wrap justify-center gap-3 mb-4';
                 
-                // 3. Create Buttons for the Category
-                predefinedCategories[category].forEach(word => {
+                predefinedCategories[category].forEach(wordWithEmoji => {
                     const button = document.createElement('button');
-                    // Add a subtle emoji to each word button
-                    button.innerHTML = `<span>${word}</span>`; 
-                    if (category.includes("Fraud")) {
-                         button.innerHTML = `⚠️ ${word}`;
-                    } else if (category.includes("Account")) {
-                         button.innerHTML = `👤 ${word}`;
-                    } else if (category.includes("Item")) {
-                         button.innerHTML = `🏷️ ${word}`;
-                    } else if (category.includes("Shipping")) {
-                         button.innerHTML = `✈️ ${word}`;
-                    }
+                    
+                    // The word (phrase) is the content AFTER the emoji and space
+                    const word = wordWithEmoji.substring(wordWithEmoji.indexOf(' ') + 1);
 
+                    button.innerHTML = wordWithEmoji; 
                     button.className = 'word-button';
                     
                     button.addEventListener('click', () => {
-                        saveHistory(); // Save state BEFORE adding the word
+                        saveHistory(); 
                         
-                        // Spacing logic: Add a space unless the output is empty or the word starts with punctuation.
                         let newValue = commentOutput.value;
-                        // Use regex to check for common leading punctuation
                         if (newValue.length > 0 && !newValue.endsWith(' ') && !/^[.,!?]/.test(word)) {
                             newValue += ' ';
                         }
@@ -275,16 +268,12 @@
 
         // --- Event Listeners ---
 
-        // NEW: Undo Button Logic (Undo Last Action)
         undoButton.addEventListener('click', () => {
             if (historyStack.length > 1) {
-                // Pop the current state (the one we want to undo)
                 historyStack.pop(); 
-                // Restore the previous state
                 restoreState(historyStack[historyStack.length - 1]); 
                 showMessage('Action undone.', 'success');
             } else if (historyStack.length === 1 && commentOutput.value !== '') {
-                 // Special case: go back to the initial empty state
                 historyStack = [''];
                 restoreState('');
                 showMessage('Comment cleared (restored to initial state).', 'success');
@@ -293,11 +282,9 @@
             }
         });
 
-        // NEW: Delete Last Word Button Logic
         deleteLastWordButton.addEventListener('click', () => {
             if (commentOutput.value) {
-                saveHistory(); // Save state BEFORE deleting
-                // Use regex to find and remove the last word (or punctuation group)
+                saveHistory();
                 let newValue = commentOutput.value.replace(/\s*[^\s]*$/, '');
                 restoreState(newValue);
                 showMessage('Last word deleted!', 'success');
@@ -306,45 +293,40 @@
             }
         });
 
-        // NEW: Custom Text Button Logic
         addCustomButton.addEventListener('click', () => {
             const customText = customInput.value.trim();
             if (customText) {
-                saveHistory(); // Save state BEFORE adding text
+                saveHistory(); 
                 
                 let newValue = commentOutput.value;
-                // Spacing logic (same as word buttons)
                 if (newValue.length > 0 && !newValue.endsWith(' ') && !/^[.,!?]/.test(customText)) {
                     newValue += ' ';
                 }
                 commentOutput.value = newValue + customText;
-                customInput.value = ''; // Clear the input field
+                customInput.value = ''; 
                 commentOutput.scrollTop = commentOutput.scrollHeight;
                 showMessage('Custom text added.', 'success');
             } else {
                 showMessage('Please enter text to add.', 'error');
             }
         });
-        // Allow pressing Enter in custom input to trigger add
+        
         customInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent new line in input
+                e.preventDefault();
                 addCustomButton.click();
             }
         });
 
-        // Clear button
         clearButton.addEventListener('click', () => {
             if (commentOutput.value) {
-                saveHistory(); // Save the state before clearing (so clear is undoable)
+                saveHistory();
             }
             commentOutput.value = '';
-            // Ensure the history stack is correctly set to the empty state
             historyStack.push(''); 
             showMessage('Comment cleared!', 'success');
         });
 
-        // Copy button
         copyButton.addEventListener('click', () => {
             if (commentOutput.value) {
                 navigator.clipboard.writeText(commentOutput.value)
@@ -360,10 +342,8 @@
             }
         });
 
-        // Initialize buttons and save the initial empty state
         document.addEventListener('DOMContentLoaded', () => {
             createWordButtons();
-            // Save the initial empty state for a proper undo/clear flow
             saveHistory(); 
         });
     </script>
