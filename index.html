@@ -10,7 +10,7 @@
         /* BASE STYLES & FONT */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #FCE4EC; /* Light, soft pink background */
+            background-color: #FCE4EC; 
         }
         .container {
             max-width: 1200px; 
@@ -18,7 +18,6 @@
             padding: 2.5rem; 
             background-color: #ffffff;
             border-radius: 1.5rem; 
-            /* Main container shadow is kept */
             box-shadow: 0 15px 25px -5px rgba(236, 64, 122, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
         }
         .category-title {
@@ -30,7 +29,7 @@
         
         /* PHRASE BUTTON STYLING */
         .word-button {
-            background-color: #EC407A; /* Vibrant Rose Pink */
+            background-color: #EC407A; 
             color: white;
             font-weight: 600;
             padding: 0.5rem 1rem;
@@ -68,4 +67,344 @@
             justify-content: center;
         }
         #clearButton, #copyButton { @apply bg-purple-600 hover:bg-purple-700 focus:ring-purple-500; }
-        #undoButton { @apply bg-orange-5
+        #undoButton { @apply bg-orange-500 hover:bg-orange-600 focus:ring-orange-500; }
+        #deleteLastWordButton { @apply bg-red-500 hover:bg-red-600 focus:ring-red-500; }
+
+        /* CUTER, SOFTER INPUT CONTAINER STYLE */
+        .input-group-pink {
+            @apply flex items-stretch p-3 rounded-3xl border-4 border-pink-300 bg-pink-200 mb-20 w-full; 
+            box-shadow: 0 4px 6px -1px rgba(236, 64, 122, 0.2), 0 2px 4px -1px rgba(236, 64, 122, 0.1);
+        }
+        
+        /* Custom Input Field */
+        .custom-input { 
+            @apply w-full flex-grow p-3 border-none ring-0 focus:ring-0 focus:border-transparent bg-transparent text-pink-800 placeholder-pink-800 text-base rounded-lg;
+            font-size: 1rem;
+            min-width: 0; 
+            flex-grow: 6; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+        }
+
+        .custom-input::placeholder {
+            color: rgba(153, 27, 72, 0.7); 
+        }
+        
+        /* Custom Add Button Style */
+        .custom-add-button {
+            @apply bg-pink-300 border border-pink-400 shadow-md
+                   text-pink-800 font-bold py-2 px-4 rounded-lg
+                   transition-all duration-200 ease-in-out
+                   self-stretch flex items-center gap-2;
+            flex-grow: 1; 
+            min-width: 150px;
+            margin-left: 0.5rem; 
+        }
+        .custom-add-button:hover {
+            @apply bg-white border-pink-500 text-pink-700 transform scale-100; 
+        }
+
+        /* Filter Input Style */
+        #searchInput {
+            @apply w-full p-3 border-none ring-0 focus:ring-0 focus:border-transparent bg-transparent text-pink-800 placeholder-pink-800 text-base rounded-lg;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+        }
+
+        #searchInput::placeholder {
+            color: rgba(153, 27, 72, 0.7); 
+        }
+    </style>
+</head>
+<body class="p-4">
+    <div class="container">
+        <div class="flex items-center justify-center mb-6">
+            <h1 class="text-3xl font-bold text-center text-gray-800">🕵️‍♀️ Pink Panther Comment Builder 🐾</h1>
+        </div>
+        
+        <!-- RAW TEXTAREA (Source) -->
+        <textarea id="commentOutput"
+                    class="w-full p-4 mb-6 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-gray-700 text-lg"
+                    placeholder="Click phrases below, or add custom text, to build your comment..."
+                    readonly></textarea>
+
+        <!-- ACTION CONTROLS -->
+        <div class="flex justify-center space-x-4 mb-8 flex-wrap">
+            <button id="undoButton" class="control-button">↩️ Undo Last Action</button>
+            <button id="deleteLastWordButton" class="control-button">✖️ Delete Last Word</button>
+            <button id="clearButton" class="control-button">🧹 Clear Comment</button>
+            <button id="copyButton" class="control-button">📋 Copy to Clipboard</button>
+        </div>
+        
+        <!-- 1. SEARCH FILTER INPUT (Wider, Solid Pink Border, Extra Space Below) -->
+        <div class="input-group-pink">
+            <input type="text" id="searchInput" placeholder="🔍 Filter pre-defined phrases..." >
+        </div>
+
+        <!-- 2. CUSTOM INPUT GROUP (Wider, Solid Pink Border) -->
+        <div class="input-group-pink custom-input-group flex items-stretch">
+            <input type="text" id="customInput" class="custom-input" placeholder="Type custom phrase or note (Alt+C to focus)">
+            <button id="addCustomButton" class="custom-add-button">📌 Your own words</button>
+        </div>
+        
+        <div id="categoryButtonsContainer">
+            <!-- Phrase buttons will load here -->
+        </div>
+    </div>
+
+    <div id="messageBox" class="message-box"></div>
+
+    <img src="mea.png" alt="Pink Panther Character" class="bottom-image">
+
+    <script>
+        const predefinedCategories = {
+            "🕵️‍♀️ Fraud Indicators": [
+                "⚠️ Pink Panther - scam - Do Not Unblock!",
+                "⚠️ Empty Parcel Scam.", 
+                "⚠️ Pattern Potential Fraudulent member. Please proceed with caution and investigate thoroughly if a similar issue occurs.", 
+                "⚠️ Malicious IP.",
+                "⚠️ Carrier suspected fraud.",
+                "⚠️ Known scam pattern.",
+                "⚠️ Suspicious fingerprints.",
+                "⚠️ Suspicious Tracking.",
+                "⚠️ Suspicious Transaction history.",
+                "⚠️ Suspicious Chat log.",
+                "⚠️ Malicious Multiple Accounts. Buyer and Seller are the same person.",
+                "⚠️ Abuse of Compensation.",
+                "⚠️ Sending same proof in multiple TXs."
+            ],
+            "👤 Account & Member Behavior": [
+                "👤 New account.",
+                "👤 Non responsive member.",
+                "👤 Member inactive since TX creation.",
+                "👤 1st High value TX.",
+                "👤 Member has a pattern of Lost Parcel compensation abuse.",
+                "👤 Member only uses Public IPs.",
+                "👤 Suspicious account changes.",
+                "👤 Username, Member's name and Email do not match.",
+                "👤 Over 3 Months Gap between transactions.",
+                "👤 Too many shipping addresses with diffrent details.",
+                "👤 Using VPNs to mask their location.", 
+                "👤 Phone number code doesn't match the area."
+            ],
+            "📦 Item & Listing Issues": [
+                "🏷️ Suspicious listings.",
+                "🏷️ Listing taken from the web.",
+                "🏷️ Listing/item commonly used with scam cases.",
+                "🏷️ Suspicious deleted items.",
+                "🏷️ Item retail price doesn't match.",
+                "🏷️ All High value items are canceled.",
+                "🏷️ Listings are cropped.",
+                "🏷️ Too many duplicate listings.",
+                "🏷️ Item presumably lost or damaged is relisted.",
+                "🏷️ Same listings found on another account." 
+            ],
+            "🚚 Shipping & Parcel Status": [
+                "✈️ Suspicious drop off point.",
+                "✈️ Signs of label manipulation.",
+                "✈️ Drop off point is over 2 hours away.",
+                "✈️ Asks only for a Specific Carrier.",
+                "✈️ No updates after drop off.",
+                "✈️ Parcel refused."
+            ]
+        };
+
+        const commentOutput = document.getElementById('commentOutput');
+        const categoryButtonsContainer = document.getElementById('categoryButtonsContainer');
+        const clearButton = document.getElementById('clearButton');
+        const copyButton = document.getElementById('copyButton');
+        const undoButton = document.getElementById('undoButton');
+        const deleteLastWordButton = document.getElementById('deleteLastWordButton');
+        const customInput = document.getElementById('customInput');
+        const addCustomButton = document.getElementById('addCustomButton');
+        const searchInput = document.getElementById('searchInput'); 
+        const messageBox = document.getElementById('messageBox');
+
+        let historyStack = [];
+        const MAX_HISTORY = 20;
+
+        // === CORE FUNCTIONS ===
+
+        function saveHistory() {
+            if (historyStack.length === 0 || historyStack[historyStack.length - 1] !== commentOutput.value) {
+                if (historyStack.length >= MAX_HISTORY) {
+                    historyStack.shift(); 
+                }
+                historyStack.push(commentOutput.value);
+                autoGrow(commentOutput); 
+            }
+        }
+        
+        function restoreState(newState) {
+            commentOutput.value = newState;
+            commentOutput.scrollTop = commentOutput.scrollHeight;
+            autoGrow(commentOutput); 
+        }
+
+        function showMessage(message, type = 'success') {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = 'message-box show';
+            messageBox.style.backgroundColor = (type === 'error') ? '#f44336' : '#20c997'; 
+
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 2000);
+        }
+
+        // === FEATURE: AUTO-GROW TEXTAREA ===
+        function autoGrow(element) {
+            element.style.height = 'auto';
+            element.style.height = element.scrollHeight + 'px';
+        }
+        
+        commentOutput.addEventListener('input', () => {
+             saveHistory(); 
+             autoGrow(commentOutput);
+        });
+
+        // === PHRASE BUTTONS ===
+        function createWordButtons(filterText = '') {
+            categoryButtonsContainer.innerHTML = ''; 
+            const filter = filterText.toLowerCase();
+
+            for (const category in predefinedCategories) {
+                const filteredButtons = predefinedCategories[category].filter(word => 
+                    word.toLowerCase().includes(filter)
+                );
+
+                if (filteredButtons.length > 0) {
+                    const title = document.createElement('h2');
+                    title.innerHTML = category; 
+                    title.className = 'category-title';
+                    categoryButtonsContainer.appendChild(title);
+
+                    const buttonGroup = document.createElement('div');
+                    buttonGroup.className = 'flex flex-wrap justify-center gap-3 mb-4';
+                    
+                    filteredButtons.forEach(wordWithEmoji => {
+                        const word = wordWithEmoji.substring(wordWithEmoji.indexOf(' ') + 1);
+                        
+                        const button = document.createElement('button');
+                        button.innerHTML = wordWithEmoji; 
+                        button.className = 'word-button';
+                        
+                        button.addEventListener('click', () => {
+                            saveHistory(); 
+                            
+                            let newValue = commentOutput.value.trim();
+                            // Logic to add a period and space for clean separation
+                            if (newValue.length > 0 && !newValue.endsWith('.')) {
+                                newValue += '. ';
+                            } else if (newValue.length > 0) {
+                                newValue += ' ';
+                            }
+                            
+                            commentOutput.value = newValue + word;
+                            commentOutput.scrollTop = commentOutput.value.length;
+                            autoGrow(commentOutput); 
+                        });
+                        buttonGroup.appendChild(button);
+                    });
+                    categoryButtonsContainer.appendChild(buttonGroup);
+                }
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+
+        searchInput.addEventListener('input', (e) => {
+            createWordButtons(e.target.value);
+        });
+
+        undoButton.addEventListener('click', () => {
+            if (historyStack.length > 1) {
+                historyStack.pop(); 
+                restoreState(historyStack[historyStack.length - 1]); 
+                showMessage('Action undone.', 'success');
+            } else {
+                showMessage('No history to undo.', 'error');
+            }
+        });
+
+        deleteLastWordButton.addEventListener('click', () => {
+            if (commentOutput.value) {
+                saveHistory();
+                let newValue = commentOutput.value.replace(/\s*[^\s]*$/, '');
+                restoreState(newValue);
+                showMessage('Last word deleted!', 'success');
+            } else {
+                showMessage('Comment is already empty.', 'error');
+            }
+        });
+
+        addCustomButton.addEventListener('click', () => {
+            const customText = customInput.value.trim();
+            if (customText) {
+                saveHistory(); 
+                
+                let newValue = commentOutput.value.trim();
+                 // Logic to add a period and space for clean separation
+                if (newValue.length > 0 && !newValue.endsWith('.')) {
+                    newValue += '. ';
+                } else if (newValue.length > 0) {
+                    newValue += ' ';
+                }
+                
+                commentOutput.value = newValue + customText;
+                customInput.value = ''; 
+                commentOutput.scrollTop = commentOutput.scrollHeight;
+                autoGrow(commentOutput); 
+                showMessage('Custom text added.', 'success');
+            } else {
+                showMessage('Please enter text to add.', 'error');
+            }
+        });
+        
+        customInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); 
+                addCustomButton.click();
+            }
+        });
+
+        clearButton.addEventListener('click', () => {
+            if (commentOutput.value) {
+                saveHistory();
+            }
+            commentOutput.value = '';
+            historyStack.push(''); 
+            autoGrow(commentOutput); 
+            showMessage('Comment cleared!', 'success');
+        });
+
+        copyButton.addEventListener('click', () => {
+            if (commentOutput.value) {
+                navigator.clipboard.writeText(commentOutput.value)
+                    .then(() => {
+                        showMessage('Comment copied to clipboard!', 'success');
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy text: ', err);
+                        showMessage('Failed to copy comment.', 'error');
+                    });
+            } else {
+                showMessage('Nothing to copy!', 'error');
+            }
+        });
+
+        // === FEATURE: KEYBOARD SHORTCUT (Alt+C) ===
+        document.addEventListener('keydown', (e) => {
+            if (e.altKey && (e.key === 'c' || e.key === 'C')) {
+                e.preventDefault();
+                customInput.focus();
+            }
+        });
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createWordButtons();
+            saveHistory(); 
+            autoGrow(commentOutput); 
+        });
+    </script>
+</body>
+</html>
