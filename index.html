@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🕵️‍♀️🐾 Pink Panther Comment Builder</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -51,6 +51,7 @@
             box-shadow: 0 0 0 2px rgba(236, 64, 122, 0.5);
         }
         .control-button {
+            /* Standard Control Buttons - now slightly bolder */
             @apply text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75;
             display: flex;
             align-items: center;
@@ -61,7 +62,9 @@
         #clearButton, #copyButton { @apply bg-purple-600 hover:bg-purple-700 focus:ring-purple-500; }
         #undoButton { @apply bg-orange-500 hover:bg-orange-600 focus:ring-orange-500; }
         #deleteLastWordButton { @apply bg-red-500 hover:bg-red-600 focus:ring-red-500; }
-        #boldButton, #separatorButton { @apply bg-blue-500 hover:bg-blue-600 focus:ring-blue-500; }
+        
+        /* Formatting Buttons promoted to Pink/Primary color */
+        #boldButton, #separatorButton { @apply bg-pink-600 hover:bg-pink-700 focus:ring-pink-500; } 
         
         /* Main Textarea Style */
         textarea {
@@ -93,33 +96,33 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
-        /* UPDATED: Custom Input Group Styling - Paler Pink Background/Border */
+        /* UPDATED: Custom Input Group Styling - Reverting to simpler style (like the search bar) */
         .custom-input-group {
-            @apply flex items-stretch mt-4 mb-6 p-3 rounded-xl border-2 border-pink-400 shadow-xl bg-pink-100; 
+            /* Simpler styling: less border, white background */
+            @apply flex items-stretch mt-4 mb-6 p-1 rounded-lg border border-gray-300 shadow-sm bg-white;
         }
         
-        /* UPDATED: Custom Input - ensures maximum width */
+        /* Custom Input - ensures maximum width */
         .custom-input { 
-            @apply w-full flex-grow p-1 border-none bg-transparent text-gray-800 placeholder-gray-500 focus:ring-0 text-base;
+            @apply w-full flex-grow p-2 border-none bg-transparent text-gray-800 placeholder-gray-500 focus:ring-0 text-base;
             font-size: 1rem;
             min-width: 0; 
-            /* Ensure the input takes up much more space than the button */
             flex-grow: 4;
         }
         
-        /* UPDATED: Custom Add Button Style - White background for contrast */
+        /* Custom Add Button Style - Now simpler, but still defined */
         .custom-add-button {
-            @apply bg-white border border-pink-300 shadow-md 
+            /* Using a light secondary pink for definition */
+            @apply bg-pink-100 border border-pink-300 shadow-sm
                    text-pink-600 font-bold py-2 px-4 rounded-lg
                    transition-all duration-200 ease-in-out
                    self-stretch flex items-center gap-2;
-            /* Ensure the button doesn't take up excessive space */
             flex-grow: 1;
             min-width: 150px;
-            margin-left: 0.5rem; /* Small space between input and button */
+            margin-left: 0.5rem; 
         }
         .custom-add-button:hover {
-            @apply bg-pink-50 border-pink-400 text-pink-700 transform scale-105;
+            @apply bg-pink-200 border-pink-400 text-pink-700 transform scale-105;
             text-decoration: none; 
         }
     </style>
@@ -422,4 +425,3 @@
     </script>
 </body>
 </html>
-
