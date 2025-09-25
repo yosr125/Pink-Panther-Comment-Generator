@@ -7,17 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* BASE STYLES & FONT */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #FCE4EC; /* Brighter, muted pink background */
+            background-color: #FCE4EC; /* Light, soft pink background */
         }
         .container {
-            max-width: 900px;
+            max-width: 1000px; /* Made the container wider to fit side-by-side inputs better */
             margin: 2rem auto;
-            padding: 1.5rem;
+            padding: 2rem;
             background-color: #ffffff;
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-radius: 1.5rem; /* Cuter, rounder corners */
+            box-shadow: 0 15px 25px -5px rgba(236, 64, 122, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Soft pink shadow */
         }
         .category-title {
             @apply text-xl font-bold text-gray-800 mt-6 mb-3 border-b-2 border-pink-500 pb-1; 
@@ -25,13 +26,15 @@
             align-items: center;
             gap: 0.5rem;
         }
+        
+        /* PHRASE BUTTON STYLING */
         .word-button {
-            background-color: #EC407A; /* Brighter, muted rose pink */
+            background-color: #EC407A; /* Vibrant Rose Pink */
             color: white;
             font-weight: 600;
             padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 0.75rem; /* Rounder for cuteness */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease-in-out;
             transform: scale(1);
             outline: none;
@@ -44,29 +47,56 @@
             justify-content: center;
         }
         .word-button:hover {
-            background-color: #D81B60; /* Slightly deeper on hover */
-            transform: scale(1.03);
+            background-color: #D81B60; 
+            transform: scale(1.05); /* More pronounced hover */
         }
-        .word-button:focus {
-            box-shadow: 0 0 0 2px rgba(236, 64, 122, 0.5);
-        }
-        .control-button {
-            @apply text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            justify-content: center;
-        }
-        /* Specific colors for control buttons */
-        #clearButton, #copyButton { @apply bg-purple-600 hover:bg-purple-700 focus:ring-purple-500; }
-        #undoButton { @apply bg-orange-500 hover:bg-orange-600 focus:ring-orange-500; }
-        #deleteLastWordButton { @apply bg-red-500 hover:bg-red-600 focus:ring-red-500; }
-        
-        /* Main Textarea Style */
+
+        /* OUTPUT TEXTAREA (Auto-Grow) */
         textarea {
-            @apply resize-y;
-            min-height: 120px;
+            @apply resize-none; /* Disable manual resize */
+            min-height: 100px;
+            overflow-y: hidden; /* Hide scrollbar */
         }
+
+        /* COHESIVE INPUT GROUP STYLING (The Pink Wrapper) */
+        .input-group-pink {
+            /* Shared style for both Filter and Custom Input */
+            @apply p-2 rounded-xl border-4 border-pink-500 shadow-xl bg-pink-100; /* Thicker border & shadow for distinction */
+            transition: all 0.3s ease-in-out;
+        }
+        .input-group-pink:hover {
+             box-shadow: 0 0 10px rgba(236, 64, 122, 0.7); /* Cute hover shadow */
+        }
+
+        /* Custom Input Field (White field inside pink wrapper) */
+        .custom-input { 
+            @apply w-full flex-grow p-3 border-none ring-0 focus:ring-0 focus:border-transparent bg-white text-gray-800 placeholder-gray-500 text-base rounded-lg;
+            font-size: 1rem;
+            min-width: 0; 
+            flex-grow: 4;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        /* Custom Add Button Style */
+        .custom-add-button {
+            @apply bg-pink-300 border border-pink-400 shadow-md
+                   text-pink-800 font-bold py-2 px-4 rounded-lg
+                   transition-all duration-200 ease-in-out
+                   self-stretch flex items-center gap-2;
+            flex-grow: 1;
+            min-width: 150px;
+            margin-left: 0.5rem; 
+        }
+        .custom-add-button:hover {
+            @apply bg-white border-pink-500 text-pink-700 transform scale-105;
+        }
+
+        /* Filter Input Style (White field inside pink wrapper) */
+        #searchInput {
+            @apply w-full p-2 border-none ring-0 focus:ring-0 focus:border-transparent bg-white text-gray-800 placeholder-gray-500 text-base rounded-lg;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
         .message-box {
             position: fixed;
             bottom: 20px;
@@ -83,51 +113,6 @@
         .message-box.show {
             opacity: 1;
         }
-        .bottom-image {
-            display: block;
-            margin: 2rem auto;
-            max-width: 50%;
-            height: auto;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* COHESIVE INPUT GROUP STYLING (The Pink Wrapper) */
-        .input-group-pink {
-            @apply flex items-stretch p-2 rounded-xl border-2 border-pink-500 shadow-lg bg-pink-100 mb-4; 
-        }
-
-        /* Custom Input Field (White field inside pink wrapper) */
-        .custom-input { 
-            /* Fix: Explicitly remove the input's default border and ring */
-            @apply w-full flex-grow p-3 border-none ring-0 focus:ring-0 focus:border-transparent bg-white text-gray-800 placeholder-gray-500 text-base rounded-lg;
-            font-size: 1rem;
-            min-width: 0; 
-            flex-grow: 4;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        /* Custom Add Button Style */
-        .custom-add-button {
-            @apply bg-white border border-pink-300 shadow-md
-                   text-pink-600 font-bold py-2 px-4 rounded-lg
-                   transition-all duration-200 ease-in-out
-                   self-stretch flex items-center gap-2;
-            flex-grow: 1;
-            min-width: 150px;
-            margin-left: 0.5rem; 
-        }
-        .custom-add-button:hover {
-            @apply bg-pink-50 border-pink-400 text-pink-700 transform scale-105;
-            text-decoration: none; 
-        }
-
-        /* Filter Input Style (White field inside pink wrapper) */
-        #searchInput {
-             /* Fix: Explicitly remove the input's default border and ring */
-            @apply w-full p-2 border-none ring-0 focus:ring-0 focus:border-transparent bg-white text-gray-800 placeholder-gray-500 text-base rounded-lg;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-        }
     </style>
 </head>
 <body class="p-4">
@@ -137,7 +122,7 @@
         </div>
 
         <textarea id="commentOutput"
-                    class="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-gray-700 text-lg"
+                    class="w-full p-4 mb-6 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-gray-700 text-lg"
                     placeholder="Click phrases below, or add custom text, to build your comment..."
                     readonly></textarea>
 
@@ -148,13 +133,15 @@
             <button id="copyButton" class="control-button">📋 Copy to Clipboard</button>
         </div>
         
-        <div class="input-group-pink">
-            <input type="text" id="searchInput" placeholder="🔍 Filter pre-defined phrases..." >
-        </div>
+        <div class="flex space-x-4 mb-6">
+            <div class="input-group-pink w-1/2">
+                <input type="text" id="searchInput" placeholder="🔍 Filter pre-defined phrases..." >
+            </div>
 
-        <div class="input-group-pink custom-input-group">
-            <input type="text" id="customInput" class="custom-input" placeholder="Type custom phrase or note here...">
-            <button id="addCustomButton" class="custom-add-button">📌 Your own words</button>
+            <div class="input-group-pink custom-input-group flex-1 flex items-stretch">
+                <input type="text" id="customInput" class="custom-input" placeholder="Type custom phrase or note (Alt+C to focus)">
+                <button id="addCustomButton" class="custom-add-button">📌 Your own words</button>
+            </div>
         </div>
         
         <div id="categoryButtonsContainer">
@@ -232,18 +219,22 @@
         let historyStack = [];
         const MAX_HISTORY = 20;
 
+        // === CORE FUNCTIONS ===
+
         function saveHistory() {
             if (historyStack.length === 0 || historyStack[historyStack.length - 1] !== commentOutput.value) {
                 if (historyStack.length >= MAX_HISTORY) {
                     historyStack.shift(); 
                 }
                 historyStack.push(commentOutput.value);
+                autoGrow(commentOutput); // Call auto-grow on history save
             }
         }
         
         function restoreState(newState) {
             commentOutput.value = newState;
             commentOutput.scrollTop = commentOutput.scrollHeight;
+            autoGrow(commentOutput); // Call auto-grow on state restore
         }
 
         function showMessage(message, type = 'success') {
@@ -256,6 +247,20 @@
             }, 2000);
         }
 
+        // === FEATURE 1: AUTO-GROW TEXTAREA ===
+        function autoGrow(element) {
+            // Set height to 'auto' to recalculate scroll height, then set height to scroll height
+            element.style.height = 'auto';
+            element.style.height = element.scrollHeight + 'px';
+        }
+        
+        // Initial auto-grow and whenever input changes
+        commentOutput.addEventListener('input', () => {
+             saveHistory(); // Ensure manual input is recorded
+             autoGrow(commentOutput);
+        });
+
+        // === PHRASE BUTTONS ===
         function createWordButtons(filterText = '') {
             categoryButtonsContainer.innerHTML = ''; 
             const filter = filterText.toLowerCase();
@@ -275,10 +280,9 @@
                     buttonGroup.className = 'flex flex-wrap justify-center gap-3 mb-4';
                     
                     filteredButtons.forEach(wordWithEmoji => {
-                        const button = document.createElement('button');
-                        
                         const word = wordWithEmoji.substring(wordWithEmoji.indexOf(' ') + 1);
-
+                        
+                        const button = document.createElement('button');
                         button.innerHTML = wordWithEmoji; 
                         button.className = 'word-button';
                         
@@ -291,6 +295,7 @@
                             }
                             commentOutput.value = newValue + word;
                             commentOutput.scrollTop = commentOutput.value.length;
+                            autoGrow(commentOutput); // Crucial for auto-grow when adding phrases
                         });
                         buttonGroup.appendChild(button);
                     });
@@ -299,7 +304,7 @@
             }
         }
 
-        // --- Event Listeners ---
+        // --- EVENT LISTENERS ---
 
         searchInput.addEventListener('input', (e) => {
             createWordButtons(e.target.value);
@@ -338,6 +343,7 @@
                 commentOutput.value = newValue + customText;
                 customInput.value = ''; 
                 commentOutput.scrollTop = commentOutput.scrollHeight;
+                autoGrow(commentOutput); // Crucial for auto-grow when adding custom text
                 showMessage('Custom text added.', 'success');
             } else {
                 showMessage('Please enter text to add.', 'error');
@@ -357,6 +363,7 @@
             }
             commentOutput.value = '';
             historyStack.push(''); 
+            autoGrow(commentOutput); // Reset height on clear
             showMessage('Comment cleared!', 'success');
         });
 
@@ -375,11 +382,21 @@
             }
         });
 
+        // === FEATURE 2: KEYBOARD SHORTCUT (Alt+C) ===
+        document.addEventListener('keydown', (e) => {
+            // Check for Alt + C (or Option + C on Mac)
+            if (e.altKey && (e.key === 'c' || e.key === 'C')) {
+                e.preventDefault();
+                customInput.focus();
+            }
+        });
+
+
         document.addEventListener('DOMContentLoaded', () => {
             createWordButtons();
             saveHistory(); 
+            autoGrow(commentOutput); // Initial auto-grow call
         });
     </script>
 </body>
 </html>
-
