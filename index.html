@@ -20,7 +20,6 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         .category-title {
-            /* Style for Category Headings */
             @apply text-xl font-bold text-gray-800 mt-6 mb-3 border-b-2 border-pink-500 pb-1; 
             display: flex;
             align-items: center;
@@ -92,22 +91,18 @@
             border-radius: 0.5rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        /* UPDATED: Custom Input Styling for better look */
+        /* UPDATED: Custom Input Styling for a single-line, taller input */
         .custom-input-group {
-            /* Changed to align-items: stretch for the multi-line textarea */
             @apply flex items-stretch mt-4 mb-6 p-2 rounded-xl border border-pink-300 shadow-lg bg-pink-50;
         }
-        .custom-input-container {
-            flex-grow: 1; /* Allows the textarea to take up most space */
-        }
-        .custom-input-textarea {
-            /* Changed to textarea styling */
-            @apply w-full p-2 border-none bg-transparent text-gray-800 placeholder-gray-500 focus:ring-0 text-base resize-none;
-            min-height: 80px; /* Made the area taller */
+        .custom-input { /* Changed back to input */
+            @apply flex-grow p-3 border-none bg-transparent text-gray-800 placeholder-gray-500 focus:ring-0 text-base;
             font-size: 1rem;
+            height: 50px; /* Taller height */
+            min-width: 0; /* Allow it to shrink if needed */
         }
         .custom-add-button {
-            /* Added self-stretch to match the height of the container */
+            /* No emoji, just text */
             @apply bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out self-stretch flex items-center;
         }
     </style>
@@ -115,9 +110,7 @@
 <body class="p-4">
     <div class="container">
         <div class="flex items-center justify-center mb-6">
-            <img src="https://via.placeholder.com/60x60/FF69B4/FFFFFF?text=🐾" alt="Pink Panther Icon" class="mr-3 rounded-full">
             <h1 class="text-3xl font-bold text-center text-gray-800">🕵️‍♀️ Pink Panther Comment Builder 🐾</h1>
-            <img src="https://via.placeholder.com/60x60/FFC0CB/000000?text=🔍" alt="Decorative Magnifying Glass Icon" class="ml-3 rounded-full">
         </div>
 
         <textarea id="commentOutput"
@@ -133,11 +126,8 @@
         </div>
 
         <div class="custom-input-group">
-            <div class="custom-input-container">
-                <textarea id="customInput" class="custom-input-textarea" placeholder="Type custom phrase or note here..."></textarea>
-            </div>
-            <button id="addCustomButton" class="custom-add-button">✅ Add Custom</button> 
-        </div>
+            <input type="text" id="customInput" class="custom-input" placeholder="Type custom phrase or note here...">
+            <button id="addCustomButton" class="custom-add-button">Add Custom</button> </div>
         
         <div id="categoryButtonsContainer">
             </div>
@@ -200,165 +190,4 @@
             ]
         };
 
-        const commentOutput = document.getElementById('commentOutput');
-        const categoryButtonsContainer = document.getElementById('categoryButtonsContainer');
-        const clearButton = document.getElementById('clearButton');
-        const copyButton = document.getElementById('copyButton');
-        const undoButton = document.getElementById('undoButton');
-        const deleteLastWordButton = document.getElementById('deleteLastWordButton');
-        const customInput = document.getElementById('customInput'); // Now refers to the TEXTAREA
-        const addCustomButton = document.getElementById('addCustomButton');
-        const messageBox = document.getElementById('messageBox');
-
-        let historyStack = [];
-        const MAX_HISTORY = 20;
-
-        function saveHistory() {
-            if (historyStack.length === 0 || historyStack[historyStack.length - 1] !== commentOutput.value) {
-                if (historyStack.length >= MAX_HISTORY) {
-                    historyStack.shift(); 
-                }
-                historyStack.push(commentOutput.value);
-            }
-        }
-        
-        function restoreState(newState) {
-            commentOutput.value = newState;
-            commentOutput.scrollTop = commentOutput.scrollHeight;
-        }
-
-        function showMessage(message, type = 'success') {
-            messageBox.textContent = message;
-            messageBox.className = 'message-box show';
-            messageBox.style.backgroundColor = (type === 'error') ? '#f44336' : '#20c997'; 
-
-            setTimeout(() => {
-                messageBox.classList.remove('show');
-            }, 2000);
-        }
-
-        function createWordButtons() {
-            categoryButtonsContainer.innerHTML = ''; 
-
-            for (const category in predefinedCategories) {
-                const title = document.createElement('h2');
-                title.innerHTML = category; 
-                title.className = 'category-title';
-                categoryButtonsContainer.appendChild(title);
-
-                const buttonGroup = document.createElement('div');
-                buttonGroup.className = 'flex flex-wrap justify-center gap-3 mb-4';
-                
-                predefinedCategories[category].forEach(wordWithEmoji => {
-                    const button = document.createElement('button');
-                    
-                    const word = wordWithEmoji.substring(wordWithEmoji.indexOf(' ') + 1);
-
-                    button.innerHTML = wordWithEmoji; 
-                    button.className = 'word-button';
-                    
-                    button.addEventListener('click', () => {
-                        saveHistory(); 
-                        
-                        let newValue = commentOutput.value;
-                        if (newValue.length > 0 && !newValue.endsWith(' ') && !/^[.,!?]/.test(word)) {
-                            newValue += ' ';
-                        }
-                        commentOutput.value = newValue + word;
-                        commentOutput.scrollTop = commentOutput.scrollHeight;
-                    });
-                    buttonGroup.appendChild(button);
-                });
-                categoryButtonsContainer.appendChild(buttonGroup);
-            }
-        }
-
-        // --- Event Listeners ---
-
-        undoButton.addEventListener('click', () => {
-            if (historyStack.length > 1) {
-                historyStack.pop(); 
-                restoreState(historyStack[historyStack.length - 1]); 
-                showMessage('Action undone.', 'success');
-            } else if (historyStack.length === 1 && commentOutput.value !== '') {
-                historyStack = [''];
-                restoreState('');
-                showMessage('Comment cleared (restored to initial state).', 'success');
-            } else {
-                showMessage('No history to undo.', 'error');
-            }
-        });
-
-        deleteLastWordButton.addEventListener('click', () => {
-            if (commentOutput.value) {
-                saveHistory();
-                let newValue = commentOutput.value.replace(/\s*[^\s]*$/, '');
-                restoreState(newValue);
-                showMessage('Last word deleted!', 'success');
-            } else {
-                showMessage('Comment is already empty.', 'error');
-            }
-        });
-
-        // The logic for the custom input remains the same, but it now works with a textarea
-        addCustomButton.addEventListener('click', () => {
-            const customText = customInput.value.trim();
-            if (customText) {
-                saveHistory(); 
-                
-                let newValue = commentOutput.value;
-                if (newValue.length > 0 && !newValue.endsWith(' ') && !/^[.,!?]/.test(customText)) {
-                    newValue += ' ';
-                }
-                commentOutput.value = newValue + customText;
-                customInput.value = ''; 
-                commentOutput.scrollTop = commentOutput.scrollHeight;
-                showMessage('Custom text added.', 'success');
-            } else {
-                showMessage('Please enter text to add.', 'error');
-            }
-        });
-        
-        customInput.addEventListener('keypress', (e) => {
-            // Note: Since it's a textarea, we don't preventDefault for 'Enter' unless we specifically want to
-            // treat 'Enter' as 'Add Custom'. For multi-line input, it's often better to require the button click.
-            // If you *do* want 'Enter' to submit, uncomment the block below.
-            /*
-            if (e.key === 'Enter' && !e.shiftKey) { // Allow Shift+Enter for newline
-                e.preventDefault();
-                addCustomButton.click();
-            }
-            */
-        });
-
-        clearButton.addEventListener('click', () => {
-            if (commentOutput.value) {
-                saveHistory();
-            }
-            commentOutput.value = '';
-            historyStack.push(''); 
-            showMessage('Comment cleared!', 'success');
-        });
-
-        copyButton.addEventListener('click', () => {
-            if (commentOutput.value) {
-                navigator.clipboard.writeText(commentOutput.value)
-                    .then(() => {
-                        showMessage('Comment copied to clipboard!', 'success');
-                    })
-                    .catch(err => {
-                        console.error('Failed to copy text: ', err);
-                        showMessage('Failed to copy comment.', 'error');
-                    });
-            } else {
-                showMessage('Nothing to copy!', 'error');
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            createWordButtons();
-            saveHistory(); 
-        });
-    </script>
-</body>
-</html>
+        const commentOutput = document.getElementById 
