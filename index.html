@@ -92,12 +92,13 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
-        /* UPDATED: Custom Input Group Styling - Distinct Light Pink */
-        .custom-input-group {
-            @apply flex items-stretch mt-4 mb-6 p-2 rounded-xl border border-pink-400 shadow-md bg-pink-200; 
+        /* UPDATED: COHESIVE INPUT GROUP STYLING */
+        .input-group-pink {
+            /* Shared style for both Filter and Custom Input */
+            @apply flex items-stretch p-2 rounded-xl border-2 border-pink-500 shadow-lg bg-pink-100 mb-4; 
         }
-        
-        /* Custom Input - Increased padding and clear background */
+
+        /* Custom Input Styling */
         .custom-input { 
             @apply w-full flex-grow p-3 border-none bg-white text-gray-800 placeholder-gray-500 focus:ring-0 text-base rounded-lg;
             font-size: 1rem;
@@ -106,7 +107,7 @@
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
         
-        /* Custom Add Button Style - White button pops against pink background */
+        /* Custom Add Button Style */
         .custom-add-button {
             @apply bg-white border border-pink-300 shadow-md
                    text-pink-600 font-bold py-2 px-4 rounded-lg
@@ -121,9 +122,11 @@
             text-decoration: none; 
         }
 
-        /* Filter Input Style */
-        #searchInput {
-            @apply w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-gray-700 text-base shadow-sm;
+        /* Filter Input Style - Now within a pink container */
+        #searchInput-input {
+            /* Input element inside the pink container */
+            @apply w-full p-2 border-none bg-white text-gray-800 placeholder-gray-500 focus:ring-0 text-base rounded-lg;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -145,9 +148,11 @@
             <button id="copyButton" class="control-button">📋 Copy to Clipboard</button>
         </div>
         
-        <input type="text" id="searchInput" placeholder="🔍 Filter pre-defined phrases..." >
+        <div class="input-group-pink">
+            <input type="text" id="searchInput" class="w-full" placeholder="🔍 Filter pre-defined phrases..." >
+        </div>
 
-        <div class="custom-input-group">
+        <div class="input-group-pink custom-input-group">
             <input type="text" id="customInput" class="custom-input" placeholder="Type custom phrase or note here...">
             <button id="addCustomButton" class="custom-add-button">📌 Your own words</button>
         </div>
