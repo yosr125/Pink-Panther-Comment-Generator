@@ -61,6 +61,7 @@
         #clearButton, #copyButton { @apply bg-purple-600 hover:bg-purple-700 focus:ring-purple-500; }
         #undoButton { @apply bg-orange-500 hover:bg-orange-600 focus:ring-orange-500; }
         #deleteLastWordButton { @apply bg-red-500 hover:bg-red-600 focus:ring-red-500; }
+        #boldButton, #separatorButton { @apply bg-blue-500 hover:bg-blue-600 focus:ring-blue-500; }
         
         /* Main Textarea Style */
         textarea {
@@ -91,19 +92,35 @@
             border-radius: 0.5rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        /* Custom Input Styling */
+        
+        /* UPDATED: Custom Input Group Styling - Paler Pink Background/Border */
         .custom-input-group {
-            /* Ensures flex items (input and button) stretch to container height */
-            @apply flex items-stretch mt-4 mb-6 p-2 rounded-xl border border-pink-300 shadow-lg bg-pink-50;
+            @apply flex items-stretch mt-4 mb-6 p-3 rounded-xl border-2 border-pink-400 shadow-xl bg-pink-100; 
         }
+        
+        /* UPDATED: Custom Input - ensures maximum width */
         .custom-input { 
-            /* UPDATED: Removed fixed height, relies on padding/flex for visual height */
-            @apply flex-grow p-3 border-none bg-transparent text-gray-800 placeholder-gray-500 focus:ring-0 text-base;
+            @apply w-full flex-grow p-1 border-none bg-transparent text-gray-800 placeholder-gray-500 focus:ring-0 text-base;
             font-size: 1rem;
             min-width: 0; 
+            /* Ensure the input takes up much more space than the button */
+            flex-grow: 4;
         }
+        
+        /* UPDATED: Custom Add Button Style - White background for contrast */
         .custom-add-button {
-            @apply bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out self-stretch flex items-center gap-2;
+            @apply bg-white border border-pink-300 shadow-md 
+                   text-pink-600 font-bold py-2 px-4 rounded-lg
+                   transition-all duration-200 ease-in-out
+                   self-stretch flex items-center gap-2;
+            /* Ensure the button doesn't take up excessive space */
+            flex-grow: 1;
+            min-width: 150px;
+            margin-left: 0.5rem; /* Small space between input and button */
+        }
+        .custom-add-button:hover {
+            @apply bg-pink-50 border-pink-400 text-pink-700 transform scale-105;
+            text-decoration: none; 
         }
     </style>
 </head>
@@ -118,9 +135,13 @@
                     placeholder="Click phrases below, or add custom text, to build your comment..."
                     readonly></textarea>
 
-        <div class="flex justify-center space-x-4 mb-8">
+        <div class="flex justify-center space-x-4 mb-8 flex-wrap">
             <button id="undoButton" class="control-button">↩️ Undo Last Action</button>
             <button id="deleteLastWordButton" class="control-button">✖️ Delete Last Word</button>
+            
+            <button id="boldButton" class="control-button">**B** Bold Selection</button>
+            <button id="separatorButton" class="control-button">⏎ Add Separator</button>
+
             <button id="clearButton" class="control-button">🧹 Clear Comment</button>
             <button id="copyButton" class="control-button">📋 Copy to Clipboard</button>
         </div>
@@ -129,6 +150,9 @@
             <input type="text" id="customInput" class="custom-input" placeholder="Type custom phrase or note here...">
             <button id="addCustomButton" class="custom-add-button">📌 Your own words</button>
         </div>
+
+        <input type="text" id="searchInput" placeholder="🔍 Filter phrases..." 
+               class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-gray-700 text-base shadow-sm">
         
         <div id="categoryButtonsContainer">
             </div>
@@ -199,6 +223,9 @@
         const deleteLastWordButton = document.getElementById('deleteLastWordButton');
         const customInput = document.getElementById('customInput');
         const addCustomButton = document.getElementById('addCustomButton');
+        const searchInput = document.getElementById('searchInput'); 
+        const boldButton = document.getElementById('boldButton'); 
+        const separatorButton = document.getElementById('separatorButton'); 
         const messageBox = document.getElementById('messageBox');
 
         let historyStack = [];
@@ -228,43 +255,91 @@
             }, 2000);
         }
 
-        function createWordButtons() {
+        function createWordButtons(filterText = '') {
             categoryButtonsContainer.innerHTML = ''; 
+            const filter = filterText.toLowerCase();
 
             for (const category in predefinedCategories) {
-                const title = document.createElement('h2');
-                title.innerHTML = category; 
-                title.className = 'category-title';
-                categoryButtonsContainer.appendChild(title);
+                const filteredButtons = predefinedCategories[category].filter(word => 
+                    word.toLowerCase().includes(filter)
+                );
 
-                const buttonGroup = document.createElement('div');
-                buttonGroup.className = 'flex flex-wrap justify-center gap-3 mb-4';
-                
-                predefinedCategories[category].forEach(wordWithEmoji => {
-                    const button = document.createElement('button');
-                    
-                    const word = wordWithEmoji.substring(wordWithEmoji.indexOf(' ') + 1);
+                if (filteredButtons.length > 0) {
+                    const title = document.createElement('h2');
+                    title.innerHTML = category; 
+                    title.className = 'category-title';
+                    categoryButtonsContainer.appendChild(title);
 
-                    button.innerHTML = wordWithEmoji; 
-                    button.className = 'word-button';
+                    const buttonGroup = document.createElement('div');
+                    buttonGroup.className = 'flex flex-wrap justify-center gap-3 mb-4';
                     
-                    button.addEventListener('click', () => {
-                        saveHistory(); 
+                    filteredButtons.forEach(wordWithEmoji => {
+                        const button = document.createElement('button');
                         
-                        let newValue = commentOutput.value;
-                        if (newValue.length > 0 && !newValue.endsWith(' ') && !/^[.,!?]/.test(word)) {
-                            newValue += ' ';
-                        }
-                        commentOutput.value = newValue + word;
-                        commentOutput.scrollTop = commentOutput.value.length;
+                        const word = wordWithEmoji.substring(wordWithEmoji.indexOf(' ') + 1);
+
+                        button.innerHTML = wordWithEmoji; 
+                        button.className = 'word-button';
+                        
+                        button.addEventListener('click', () => {
+                            saveHistory(); 
+                            
+                            let newValue = commentOutput.value;
+                            if (newValue.length > 0 && !newValue.endsWith(' ') && !/^[.,!?]/.test(word)) {
+                                newValue += ' ';
+                            }
+                            commentOutput.value = newValue + word;
+                            commentOutput.scrollTop = commentOutput.value.length;
+                        });
+                        buttonGroup.appendChild(button);
                     });
-                    buttonGroup.appendChild(button);
-                });
-                categoryButtonsContainer.appendChild(buttonGroup);
+                    categoryButtonsContainer.appendChild(buttonGroup);
+                }
             }
         }
 
+        // --- Formatting Helper Function ---
+        function applyFormatting(formatStart, formatEnd = '') {
+            const textarea = commentOutput;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const value = textarea.value;
+
+            saveHistory();
+
+            if (start === end) {
+                let newValue = value;
+                if (newValue.length > 0 && !newValue.endsWith(' ')) {
+                    newValue += ' ';
+                }
+                textarea.value = newValue + formatStart + formatEnd;
+                textarea.selectionStart = textarea.selectionEnd = newValue.length + formatStart.length;
+            } else {
+                const selectedText = value.substring(start, end);
+                const newValue = value.substring(0, start) + formatStart + selectedText + formatEnd + value.substring(end);
+                textarea.value = newValue;
+
+                textarea.selectionStart = start + formatStart.length;
+                textarea.selectionEnd = end + formatStart.length;
+            }
+
+            textarea.focus();
+            showMessage('Format applied.', 'success');
+        }
+
         // --- Event Listeners ---
+
+        searchInput.addEventListener('input', (e) => {
+            createWordButtons(e.target.value);
+        });
+
+        boldButton.addEventListener('click', () => {
+            applyFormatting('**', '**');
+        });
+
+        separatorButton.addEventListener('click', () => {
+            applyFormatting('\n\n', '');
+        });
 
         undoButton.addEventListener('click', () => {
             if (historyStack.length > 1) {
@@ -347,3 +422,4 @@
     </script>
 </body>
 </html>
+
